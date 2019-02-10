@@ -15,6 +15,8 @@ int main()
 	sPerson findperson;
 	newvec.GetAt(1, findperson);
 	cout << findperson.first << std::endl;
+	cout << "size :" << newvec.GetSize() << std::endl;
+	cout << "capacity :" << newvec.GetCapacity() << std::endl;
 	system ("pause");
 
 }
