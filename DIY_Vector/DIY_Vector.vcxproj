@@ -129,9 +129,11 @@
   <ItemGroup>
     <ClInclude Include="..\Interfaces\cPerson.h" />
     <ClInclude Include="..\Interfaces\iPersonMotron.h" />
+    <ClInclude Include="DIY_Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DIY_Vector.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
