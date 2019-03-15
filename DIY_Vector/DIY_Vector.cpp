@@ -59,6 +59,92 @@ void DIY_Vector::PushBack(sPerson person)
 }
 
 
+bool DIY_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personToMatch, int maxNumberOfPeople)
+{
+	int count = 0;
+	//Search by first
+	if (personToMatch.first != "" && personToMatch.last == "")
+	{
+
+		for (int i = 0; i < this->GetSize(); i++)
+		{
+			if (this->m_Data[i].first == personToMatch.first)
+			{
+				vecPeople.push_back(this->m_Data[i]);
+				count++;
+				if (count == maxNumberOfPeople)
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	//Search by last
+	if (personToMatch.last != "" && personToMatch.first == "")
+	{
+
+		for (int i = 0; i < this->GetSize(); i++)
+		{
+			if (this->m_Data[i].last == personToMatch.last)
+			{
+				vecPeople.push_back(this->m_Data[i]);
+				count++;
+				if (count == maxNumberOfPeople)
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	//Search by first and last
+	if (personToMatch.last != "" && personToMatch.first != "")
+	{
+		for (int i = 0; i < this->GetSize(); i++)
+		{
+			if (this->m_Data[i].first == personToMatch.first && this->m_Data[i].last == personToMatch.last)
+			{
+				vecPeople.push_back(this->m_Data[i]);
+				count++;
+				if (count == maxNumberOfPeople)
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+
+	//Return all < maxNumberOfPeople
+	if (personToMatch.last == "" && personToMatch.first == "")
+	{
+
+		for (int i = 0; i < this->GetSize(); i++)
+		{
+			vecPeople.push_back(this->m_Data[i]);
+			count++;
+			if (count == maxNumberOfPeople)
+			{
+				return true;
+			}
+
+		}
+
+	}
+
+	
+	//If 0 people found
+	if (count == 0)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
 bool DIY_Vector::GetAt(unsigned int index, sPerson &thePerson) {
 	thePerson = this->m_Data[index];
 	return true;
@@ -142,6 +228,35 @@ bool DIY_Vector::FindPeople(std::vector<sPerson> &vecPeople, float minHealth, fl
     {
         return true;
     }
+}
+
+bool DIY_Vector::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, float minHealth, float maxHealth, int maxPeopleToReturn)
+{
+	int count = 0;
+	for (int i = 0; i < this->GetSize(); i++)
+	{
+		if (this->m_Data[i].health >= minHealth && this->m_Data[i].health <= maxHealth)
+		{
+			if (distance(this->m_Data[i].location, location) <= radius)
+			{
+				vecPeople.push_back(this->m_Data[i]);
+				count++;
+				if (count == maxPeopleToReturn)
+				{
+					return true;
+				}
+			}
+		}
+	}
+	//If 0 people found
+	if (count == 0)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 

@@ -10,22 +10,33 @@ class  DIY_Vector
 {
 public:
 	DIY_Vector();
-	~DIY_Vector();
+	virtual ~DIY_Vector();
 
 
 
 	void PushBack(sPerson person);
 	void InsertAt(unsigned int index, sPerson person);
+
+	//Name
+	bool FindPeopleByName(std::vector<sPerson> &vecPeople, sPerson personToMatch, int maxNumberOfPeople = INT_MAX);
 	//Index
-	bool GetAt(unsigned int index, sPerson &thePerson);		
+	bool GetAt(unsigned int index, sPerson &thePerson);
 	//ID
 	bool FindPersonByID(sPerson &person, unsigned long long uniqueID);
 	//Radius
 	bool FindPeople(std::vector<sPerson> &vecPeople, sPoint location, float radius,
 		int maxPeopleToReturn = INT_MAX);
-    //Healt
+    //Health
     bool FindPeople( std::vector<sPerson> &vecPeople, float minHealth, float maxHealth,
                     int maxPeopleToReturn = INT_MAX );
+	//Health and Radius
+	bool FindPeople(std::vector<sPerson> &vecPeople,
+		sPoint location, float radius, float minHealth, float maxHealth,
+		int maxPeopleToReturn = INT_MAX);
+	//Sort
+	//bool SortPeople(std::vector<sPerson> &vecPeople, eSortType sortType);
+
+
 
 	void SetCapacity(unsigned int newCapacity);
 	unsigned int GetSize(void);		
