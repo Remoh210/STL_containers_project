@@ -1,7 +1,10 @@
 #ifndef _DIY_Vector_HG_
 #define _DIY_Vector_HG_
 
+
+
 #include "cPerson.h"
+
 
 class  DIY_Vector
 {

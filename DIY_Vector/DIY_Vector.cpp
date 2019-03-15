@@ -1,7 +1,11 @@
-
+#ifdef _WIN32
+#include <math.h>
+#elif __APPLE__
+#include <cmath>
+#endif
 #include <iPersonMotron.h>
 #include "DIY_Vector.h"
-#include <math.h>
+
 
 //   ________  ___      ___    ___      ___      ___ _______   ________ _________  ________  ________     
 //  |\   ___ \|\  \    |\  \  /  /|    |\  \    /  /|\  ___ \ |\   ____\\___   ___\\   __  \|\   __  \    
