@@ -23,6 +23,9 @@ public:
 	//Radius
 	bool FindPeople(std::vector<sPerson> &vecPeople, sPoint location, float radius,
 		int maxPeopleToReturn = INT_MAX);
+    //Healt
+    bool FindPeople( std::vector<sPerson> &vecPeople, float minHealth, float maxHealth,
+                    int maxPeopleToReturn = INT_MAX );
 
 	void SetCapacity(unsigned int newCapacity);
 	unsigned int GetSize(void);		

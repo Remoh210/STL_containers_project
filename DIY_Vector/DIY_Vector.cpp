@@ -97,17 +97,51 @@ bool DIY_Vector::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, fl
 	int count = 0;
 	for (int i = 0; i < this->GetSize(); i++)
 	{
-		if (distance(this->m_Data[i].location, location) < radius)
+		if (distance(this->m_Data[i].location, location) <= radius)
 		{
 			vecPeople.push_back(this->m_Data[i]);
 			count++;
-			//if (count == maxPeopleToReturn)
-			//{
-			//	return true;
-			//}
+			if (count == maxPeopleToReturn)
+			{
+				return true;
+			}
 		}
 	}
-
+    //If 0 people found
+    if(count == 0)
+    {
 	return false;
+    }
+    else
+    {
+        return true;
+    }
 }
+
+bool DIY_Vector::FindPeople(std::vector<sPerson> &vecPeople, float minHealth, float maxHealth, int maxPeopleToReturn)
+{
+    int count = 0;
+    for (int i = 0; i < this->GetSize(); i++)
+    {
+        if (this->m_Data[i].health >= minHealth && this->m_Data[i].health <= maxHealth)
+        {
+            vecPeople.push_back(this->m_Data[i]);
+            count++;
+            if (count == maxPeopleToReturn)
+            {
+                return true;
+            }
+        }
+    }
+    //If 0 people found
+    if(count == 0)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
 

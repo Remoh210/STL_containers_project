@@ -84,7 +84,7 @@ int main()
 	std::vector<sPerson> vec_findByRadius;
 	sPoint loc;
 	loc.x = 0.1f; loc.y = 1.1f; loc.z = 3.1f;
-	myVec.FindPeople(vec_findByRadius, loc, 30.0f);
+	myVec.FindPeople(vec_findByRadius, loc, 30.0f, 2);
 	for (int i = 0; i < vec_findByRadius.size(); i++)
 	{
 		std::cout << "First: " << vec_findByRadius[i].first << std::endl;
@@ -96,6 +96,21 @@ int main()
 			<< vec_findByRadius[i].location.z << ")" << std::endl;
 		std::cout << std::endl;
 	}
+    
+    std::cout << "//////    FindPeopleByHealth     //////" << std::endl;
+    std::vector<sPerson> vec_findByHealth;
+    myVec.FindPeople(vec_findByHealth, 40, 75);
+    for (int i = 0; i < vec_findByRadius.size(); i++)
+    {
+        std::cout << "First: " << vec_findByHealth[i].first << std::endl;
+        std::cout << "Last: " << vec_findByHealth[i].last << std::endl;
+        std::cout << "Age: " << vec_findByHealth[i].age << std::endl;
+        std::cout << "Unique ID: " << vec_findByHealth[i].uniqueID << std::endl;
+        std::cout << "Health: " << vec_findByHealth[i].health << std::endl;
+        std::cout << "Location: (" << vec_findByHealth[i].location.x << "," << vec_findByHealth[i].location.y << ","
+        << vec_findByHealth[i].location.z << ")" << std::endl;
+        std::cout << std::endl;
+    }
 	system("pause");
 
 }
