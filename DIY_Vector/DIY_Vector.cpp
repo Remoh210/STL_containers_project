@@ -1,6 +1,7 @@
 
 #include <iPersonMotron.h>
 #include "DIY_Vector.h"
+#include <math.h>
 
 //   ________  ___      ___    ___      ___      ___ _______   ________ _________  ________  ________     
 //  |\   ___ \|\  \    |\  \  /  /|    |\  \    /  /|\  ___ \ |\   ____\\___   ___\\   __  \|\   __  \    
@@ -12,6 +13,12 @@
 //                    \|___|/                                                                             
 //                                                                                                        
 // 
+
+float distance(sPoint point, sPoint point2)
+{
+	return std::sqrt(pow((point.x - point2.x), 2) + pow((point.y - point2.y), 2) + pow((point.z - point2.z), 2));
+}
+
 
 DIY_Vector::DIY_Vector()
 	:m_CurSize(10),
@@ -53,6 +60,7 @@ bool DIY_Vector::GetAt(unsigned int index, sPerson &thePerson) {
 	return true;
 }
 
+
 void DIY_Vector::SetCapacity(unsigned int newCapacity){
 	this->m_CurSize = newCapacity;
 }
@@ -63,5 +71,39 @@ unsigned int DIY_Vector::GetCapacity(void) {
 unsigned int DIY_Vector::GetSize(void)
 {
 	return m_next;
+}
+
+bool DIY_Vector::FindPersonByID(sPerson &person, unsigned long long uniqueID)
+{
+	for (int i = 0; i < this->GetSize(); i++)
+	{
+		
+		if(this->m_Data[i].uniqueID == uniqueID)
+		{
+			person = this->m_Data[i];
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool DIY_Vector::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, int maxPeopleToReturn)
+{
+	int count = 0;
+	for (int i = 0; i < this->GetSize(); i++)
+	{
+		if (distance(this->m_Data[i].location, location) < radius)
+		{
+			vecPeople.push_back(this->m_Data[i]);
+			count++;
+			//if (count == maxPeopleToReturn)
+			//{
+			//	return true;
+			//}
+		}
+	}
+
+	return false;
 }
 

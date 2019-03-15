@@ -9,10 +9,19 @@ public:
 	DIY_Vector();
 	~DIY_Vector();
 
+
+
 	void PushBack(sPerson person);
 	void InsertAt(unsigned int index, sPerson person);
+	//Index
 	bool GetAt(unsigned int index, sPerson &thePerson);		
-	void SetCapacity(unsigned int newCapacity);		
+	//ID
+	bool FindPersonByID(sPerson &person, unsigned long long uniqueID);
+	//Radius
+	bool FindPeople(std::vector<sPerson> &vecPeople, sPoint location, float radius,
+		int maxPeopleToReturn = INT_MAX);
+
+	void SetCapacity(unsigned int newCapacity);
 	unsigned int GetSize(void);		
 	unsigned int GetCapacity(void);	
 	void clear();
