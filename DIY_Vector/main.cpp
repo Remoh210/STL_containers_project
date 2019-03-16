@@ -10,8 +10,8 @@ int main()
 	Point.z = 0.0f;
 
 	sPerson michael;
-	michael.first = "Michael";
-	michael.last = "Feeney";
+	michael.first = "";
+	michael.last = "SMITH";
 	michael.uniqueID = 0;
 	michael.age = 20;
 	michael.health = 100.0f;
@@ -56,7 +56,7 @@ int main()
 
 	sPerson jacobWithFirstOnly;
 	Point.z += 10.0f;
-	jacobWithFirstOnly.first = "Jacob";
+	jacobWithFirstOnly.first = "JACOB";
 	jacobWithFirstOnly.last = "";
 	jacobWithFirstOnly.uniqueID = 3;
 	jacobWithFirstOnly.age = 75;
@@ -72,84 +72,91 @@ int main()
 	
 	sPerson findperson;
 
+	if (!myVec.LoadDataFilesIntoContainer("../USCen/dist.female.first.txt", 
+		"../USCen/dist.male.first.txt", "../USCen/US_LastNames.txt"))
+	{
+		std::cout << "error" << std::endl;
+	}
+	
 
-
-
-	myVec.GetAt(1, findperson);
-	cout << findperson.first << std::endl;
+	//myVec.GetAt(1, findperson);
+	//cout << findperson.first << std::endl;
 	cout << "size :" << myVec.GetSize() << std::endl;
 	cout << "capacity :" << myVec.GetCapacity() << std::endl;
+	std::vector<sPerson> sortedVec;
+	myVec.SortPeople(sortedVec,  iPersonMotron::ASC_BY_HEALTH);
 
-	for (unsigned int index = 0; index != myVec.GetSize(); index++)
+	for (unsigned int index = 0; index != 100 /*myVec.GetSize()*/; index++)
 	{
 		sPerson thePerson;
 		myVec.GetAt(index, thePerson);
 
 		std::cout << index << " "
 			<< thePerson.first << " "
+			<< thePerson.health << " "
 			<< thePerson.last << std::endl;
 	}
 
-	std::cout << "//////    FindPersonByID     //////" << std::endl;
-	sPerson findByIdPerson;
-	myVec.FindPersonByID(findByIdPerson, 2);
-	std::cout << "First: " << findByIdPerson.first << std::endl;
-	std::cout << "Last: " << findByIdPerson.last << std::endl;
-	std::cout << "Age: " << findByIdPerson.age << std::endl;
-	std::cout << "Unique ID: " << findByIdPerson.uniqueID << std::endl;
-	std::cout << "Health: " << findByIdPerson.health << std::endl;
-	std::cout << "Location: (" << findByIdPerson.location.x << "," << findByIdPerson.location.y << "," 
-		<< findByIdPerson.location.z << ")" << std::endl;
+	//std::cout << "//////    FindPersonByID     //////" << std::endl;
+	//sPerson findByIdPerson;
+	//myVec.FindPersonByID(findByIdPerson, 2);
+	//std::cout << "First: " << findByIdPerson.first << std::endl;
+	//std::cout << "Last: " << findByIdPerson.last << std::endl;
+	//std::cout << "Age: " << findByIdPerson.age << std::endl;
+	//std::cout << "Unique ID: " << findByIdPerson.uniqueID << std::endl;
+	//std::cout << "Health: " << findByIdPerson.health << std::endl;
+	//std::cout << "Location: (" << findByIdPerson.location.x << "," << findByIdPerson.location.y << "," 
+	//	<< findByIdPerson.location.z << ")" << std::endl;
 
-	std::cout << "//////    FindPeopleByRadius     //////" << std::endl;
-	std::vector<sPerson> vec_findByRadius;
-	sPoint loc;
-	loc.x = 0.1f; loc.y = 1.1f; loc.z = 3.1f;
-	myVec.FindPeople(vec_findByRadius, loc, 30.0f, 2);
-	for (int i = 0; i < vec_findByRadius.size(); i++)
-	{
-		std::cout << "First: " << vec_findByRadius[i].first << std::endl;
-		std::cout << "Last: " << vec_findByRadius[i].last << std::endl;
-		std::cout << "Age: " << vec_findByRadius[i].age << std::endl;
-		std::cout << "Unique ID: " << vec_findByRadius[i].uniqueID << std::endl;
-		std::cout << "Health: " << vec_findByRadius[i].health << std::endl;
-		std::cout << "Location: (" << vec_findByRadius[i].location.x << "," << vec_findByRadius[i].location.y << ","
-			<< vec_findByRadius[i].location.z << ")" << std::endl;
-		std::cout << std::endl;
-	}
-    
-    std::cout << "//////    FindPeopleByHealth     //////" << std::endl;
-    std::vector<sPerson> vec_findByHealth;
-    myVec.FindPeople(vec_findByHealth, 40, 75);
-    for (int i = 0; i < vec_findByHealth.size(); i++)
-    {
-        std::cout << "First: " << vec_findByHealth[i].first << std::endl;
-        std::cout << "Last: " << vec_findByHealth[i].last << std::endl;
-        std::cout << "Age: " << vec_findByHealth[i].age << std::endl;
-        std::cout << "Unique ID: " << vec_findByHealth[i].uniqueID << std::endl;
-        std::cout << "Health: " << vec_findByHealth[i].health << std::endl;
-        std::cout << "Location: (" << vec_findByHealth[i].location.x << "," << vec_findByHealth[i].location.y << ","
-        << vec_findByHealth[i].location.z << ")" << std::endl;
-        std::cout << std::endl;
-    }
+	//std::cout << "//////    FindPeopleByRadius     //////" << std::endl;
+	//std::vector<sPerson> vec_findByRadius;
+	//sPoint loc;
+	//loc.x = 0.1f; loc.y = 1.1f; loc.z = 3.1f;
+	//myVec.FindPeople(vec_findByRadius, loc, 30.0f, 2);
+	//for (int i = 0; i < vec_findByRadius.size(); i++)
+	//{
+	//	std::cout << "First: " << vec_findByRadius[i].first << std::endl;
+	//	std::cout << "Last: " << vec_findByRadius[i].last << std::endl;
+	//	std::cout << "Age: " << vec_findByRadius[i].age << std::endl;
+	//	std::cout << "Unique ID: " << vec_findByRadius[i].uniqueID << std::endl;
+	//	std::cout << "Health: " << vec_findByRadius[i].health << std::endl;
+	//	std::cout << "Location: (" << vec_findByRadius[i].location.x << "," << vec_findByRadius[i].location.y << ","
+	//		<< vec_findByRadius[i].location.z << ")" << std::endl;
+	//	std::cout << std::endl;
+	//}
+ //   
+ //   std::cout << "//////    FindPeopleByHealth     //////" << std::endl;
+ //   std::vector<sPerson> vec_findByHealth;
+ //   myVec.FindPeople(vec_findByHealth, 40, 75);
+ //   for (int i = 0; i < vec_findByHealth.size(); i++)
+ //   {
+ //       std::cout << "First: " << vec_findByHealth[i].first << std::endl;
+ //       std::cout << "Last: " << vec_findByHealth[i].last << std::endl;
+ //       std::cout << "Age: " << vec_findByHealth[i].age << std::endl;
+ //       std::cout << "Unique ID: " << vec_findByHealth[i].uniqueID << std::endl;
+ //       std::cout << "Health: " << vec_findByHealth[i].health << std::endl;
+ //       std::cout << "Location: (" << vec_findByHealth[i].location.x << "," << vec_findByHealth[i].location.y << ","
+ //       << vec_findByHealth[i].location.z << ")" << std::endl;
+ //       std::cout << std::endl;
+ //   }
 
-	std::cout << "//////    FindPeople by health and radius     //////" << std::endl;
-	std::vector<sPerson> vec_findByHealthRad;
-	loc.x = 10.0f;
-	loc.y = 1.0f;
-	loc.z = 15;
-	myVec.FindPeople(vec_findByHealthRad, loc, 199, 0.0f, 80.0f);
-	for (int i = 0; i < vec_findByHealthRad.size(); i++)
-	{
-		std::cout << "First: " << vec_findByHealthRad[i].first << std::endl;
-		std::cout << "Last: " << vec_findByHealthRad[i].last << std::endl;
-		std::cout << "Age: " << vec_findByHealthRad[i].age << std::endl;
-		std::cout << "Unique ID: " << vec_findByHealthRad[i].uniqueID << std::endl;
-		std::cout << "Health: " << vec_findByHealthRad[i].health << std::endl;
-		std::cout << "Location: (" << vec_findByHealthRad[i].location.x << "," << vec_findByHealthRad[i].location.y << ","
-			<< vec_findByHealthRad[i].location.z << ")" << std::endl;
-		std::cout << std::endl;
-	}
+	//std::cout << "//////    FindPeople by health and radius     //////" << std::endl;
+	//std::vector<sPerson> vec_findByHealthRad;
+	//loc.x = 10.0f;
+	//loc.y = 1.0f;
+	//loc.z = 15;
+	//myVec.FindPeople(vec_findByHealthRad, loc, 199, 0.0f, 80.0f);
+	//for (int i = 0; i < vec_findByHealthRad.size(); i++)
+	//{
+	//	std::cout << "First: " << vec_findByHealthRad[i].first << std::endl;
+	//	std::cout << "Last: " << vec_findByHealthRad[i].last << std::endl;
+	//	std::cout << "Age: " << vec_findByHealthRad[i].age << std::endl;
+	//	std::cout << "Unique ID: " << vec_findByHealthRad[i].uniqueID << std::endl;
+	//	std::cout << "Health: " << vec_findByHealthRad[i].health << std::endl;
+	//	std::cout << "Location: (" << vec_findByHealthRad[i].location.x << "," << vec_findByHealthRad[i].location.y << ","
+	//		<< vec_findByHealthRad[i].location.z << ")" << std::endl;
+	//	std::cout << std::endl;
+	//}
 
 
 	std::cout << "//////    FindPeople by First     //////" << std::endl;
@@ -170,7 +177,7 @@ int main()
 
 	std::cout << "//////    FindPeople by Last     //////" << std::endl;
 	std::vector<sPerson> vec_findByNameLast;
-	myVec.FindPeopleByName(vec_findByNameLast, fraserWithLastOnly);
+	myVec.FindPeopleByName(vec_findByNameLast, michael);
 	for (int i = 0; i < vec_findByNameLast.size(); i++)
 	{
 		std::cout << "First: " << vec_findByNameLast[i].first << std::endl;
@@ -184,6 +191,11 @@ int main()
 	}
 
 
+
+
+
+
+	
 	system("pause");
 
 }
