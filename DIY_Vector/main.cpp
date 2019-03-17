@@ -11,7 +11,7 @@ int main()
 
 	sPerson michael;
 	michael.first = "";
-	michael.last = "SMITH";
+	michael.last = "NEBEL";
 	michael.uniqueID = 0;
 	michael.age = 20;
 	michael.health = 100.0f;
@@ -72,11 +72,16 @@ int main()
 	
 	sPerson findperson;
 
-	if (!myVec.LoadDataFilesIntoContainer("../USCen/dist.female.first.txt", 
-		"../USCen/dist.male.first.txt", "../USCen/US_LastNames.txt"))
-	{
-		std::cout << "error" << std::endl;
-	}
+//    if (!myVec.LoadDataFilesIntoContainer("USCen/dist.female.first.txt",
+//        "USCen/dist.male.first.txt", "USCen/US_LastNames.txt"))
+//    {
+//        std::cout << "error" << std::endl;
+//    }
+    if (!myVec.LoadDataFilesIntoContainer("USCen/dist.female.first.txt",
+                                          "USCen/dist.male.first.txt", "USCen/US_LastNames.txt"))
+    {
+        std::cout << "error" << std::endl;
+    }
 	
 
 	//myVec.GetAt(1, findperson);
@@ -93,8 +98,8 @@ int main()
 
 		std::cout << index << " "
 			<< thePerson.first << " "
-			<< thePerson.health << " "
-			<< thePerson.last << std::endl;
+			<< thePerson.last << " "
+			<< thePerson.health << std::endl;
 	}
 
 	//std::cout << "//////    FindPersonByID     //////" << std::endl;

@@ -1,17 +1,18 @@
-#ifndef _DIY_Vector_HG_
-#define _DIY_Vector_HG_
+#ifndef _STL_Vector_HG_
+#define _STL_Vector_HG_
 
 
 
 #include "cPerson.h"
 #include "iPersonMotron.h"
+#include <vector>
 
 
-class  DIY_Vector : public iPersonMotron
+class  STL_Vector : public iPersonMotron
 {
 public:
-	DIY_Vector();
-	 ~DIY_Vector();
+	STL_Vector();
+    ~STL_Vector();
 
 	//Will also generate random data for each peeson
 	bool LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
@@ -43,19 +44,17 @@ public:
 	bool GetPerformanceFromLastCall(sPerfData &callStats) { return false; }
 	eContainerType getContainerType(void);
 
-	void SetCapacity(unsigned int newCapacity);
-	unsigned int GetSize(void);		
-	unsigned int GetCapacity(void);	
-	void clear();
-
-	void PushBack(sPerson person);
-	void InsertAt(unsigned int index, sPerson person);
+//    void SetCapacity(unsigned int newCapacity);
+//    unsigned int GetSize(void);
+//    unsigned int GetCapacity(void);
+//    void clear();
+//
+//    void PushBack(sPerson person);
+//    void InsertAt(unsigned int index, sPerson person);
 
 private:
 
-	sPerson* m_Data;			
-	unsigned int m_CurSize;		
-	unsigned int m_next;
+    std::vector<sPerson> mVec_Person;
 	void Qsort(int left, int right, eSortType type);
 
 	//Generate n random data for all people

@@ -3,7 +3,7 @@
 using namespace std;
 int main()
 {
-	DIY_Vector myVec;
+	STL_Vector myVec;
 	sPoint Point;
 	Point.x = 0.0f;
 	Point.y = 0.0f;
@@ -72,8 +72,8 @@ int main()
 	
 	sPerson findperson;
 
-	if (!myVec.LoadDataFilesIntoContainer("../USCen/dist.female.first.txt", 
-		"../USCen/dist.male.first.txt", "../USCen/US_LastNames.txt"))
+	if (!myVec.LoadDataFilesIntoContainer("USCen/dist.female.first.txt",
+		"USCen/dist.male.first.txt", "USCen/US_LastNames.txt"))
 	{
 		std::cout << "error" << std::endl;
 	}

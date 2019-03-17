@@ -35,22 +35,21 @@ float RandomFloat(float a, float b) {
 }
 
 
-DIY_Vector::DIY_Vector()
-	:m_CurSize(10),
-	m_next(0) 
+STL_Vector::STL_Vector()
+
 {
-	this->m_Data = new sPerson[this->m_CurSize];
+    //this->mVec_Person.clear();
 }
 
-DIY_Vector::~DIY_Vector()
+STL_Vector::~STL_Vector()
 {
 
 }
 
 
-bool DIY_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, std::string firstNameMaleFileName, std::string lastNameFileName)
+bool STL_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, std::string firstNameMaleFileName, std::string lastNameFileName)
 {
-	this->clear();
+	mVec_Person.clear();
 	//Load female first names
 	std::ifstream file(firstNameFemaleFileName.c_str());
 	//Return false if no file
@@ -131,32 +130,7 @@ bool DIY_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
 }
 
 
-
-
-void DIY_Vector::PushBack(sPerson person) 
-{
-
-	this->m_Data[this->m_next] = person;
-	this->m_next++;
-
-	if (this->m_next >= this->m_CurSize) 
-	{
-		this->m_CurSize *= 2;
-		sPerson* pNewArray = new sPerson[this->m_CurSize];		
-		for (unsigned int index = 0; index < this->m_next; index++) {
-			pNewArray[index] = this->m_Data[index];
-		}
-
-		delete[] this->m_Data;
-		this->m_Data = pNewArray;
-	}
-
-	return;
-
-}
-
-
-void DIY_Vector::GenerateData(std::string first, int number)
+void STL_Vector::GenerateData(std::string first, int number)
 {
 	int GenerateNumber = rand() % number + 1;
 	for(int i = 0; i < GenerateNumber; i++)
@@ -183,18 +157,18 @@ void DIY_Vector::GenerateData(std::string first, int number)
 }
 
 
-bool DIY_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personToMatch, int maxNumberOfPeople)
+bool STL_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personToMatch, int maxNumberOfPeople)
 {
 	int count = 0;
 	//Search by first
 	if (personToMatch.first != "" && personToMatch.last == "")
 	{
 
-		for (int i = 0; i < this->GetSize(); i++)
+		for (int i = 0; i < this->mVec_Person.size()(); i++)
 		{
-			if (this->m_Data[i].first == personToMatch.first)
+			if (this->mVec_Person[i].first == personToMatch.first)
 			{
-				vecPeople.push_back(this->m_Data[i]);
+				vecPeople.push_back(this->mVec_Person[i]);
 				count++;
 				if (count == maxNumberOfPeople)
 				{
@@ -208,11 +182,11 @@ bool DIY_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson perso
 	if (personToMatch.last != "" && personToMatch.first == "")
 	{
 
-		for (int i = 0; i < this->GetSize(); i++)
+		for (int i = 0; i < this->mVec_Person.size(); i++)
 		{
-			if (this->m_Data[i].last == personToMatch.last)
+			if (this->mVec_Person[i].last == personToMatch.last)
 			{
-				vecPeople.push_back(this->m_Data[i]);
+				vecPeople.push_back(this->mVec_Person[i]);
 				count++;
 				if (count == maxNumberOfPeople)
 				{
@@ -225,11 +199,11 @@ bool DIY_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson perso
 	//Search by first and last
 	if (personToMatch.last != "" && personToMatch.first != "")
 	{
-		for (int i = 0; i < this->GetSize(); i++)
+		for (int i = 0; i < this->mVec_Person.size(); i++)
 		{
-			if (this->m_Data[i].first == personToMatch.first && this->m_Data[i].last == personToMatch.last)
+			if (this->mVec_Person[i].first == personToMatch.first && this->mVec_Person[i].last == personToMatch.last)
 			{
-				vecPeople.push_back(this->m_Data[i]);
+				vecPeople.push_back(this->mVec_Person[i]);
 				count++;
 				if (count == maxNumberOfPeople)
 				{
@@ -244,9 +218,9 @@ bool DIY_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson perso
 	if (personToMatch.last == "" && personToMatch.first == "")
 	{
 
-		for (int i = 0; i < this->GetSize(); i++)
+		for (int i = 0; i < this->mVec_Person.size(); i++)
 		{
-			vecPeople.push_back(this->m_Data[i]);
+			vecPeople.push_back(this->mVec_Person[i]);
 			count++;
 			if (count == maxNumberOfPeople)
 			{
@@ -270,7 +244,7 @@ bool DIY_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson perso
 	}
 }
 
-bool DIY_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<sPerson>& vecPeopleToMatch, int maxNumberOfPeople)
+bool STL_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<sPerson>& vecPeopleToMatch, int maxNumberOfPeople)
 {
 	for (int i = 0; i < vecPeopleToMatch.size(); i++)
 	{
@@ -281,48 +255,22 @@ bool DIY_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<s
 	
 }
 
-bool DIY_Vector::GetAt(unsigned int index, sPerson &thePerson) {
-	thePerson = this->m_Data[index];
-	return true;
-}
 
 
-eContainerType DIY_Vector::getContainerType(void)
+
+eContainerType STL_Vector::getContainerType(void)
 {
-	return eContainerType();
+    return STD_VECTOR;
 }
 
-void DIY_Vector::SetCapacity(unsigned int newCapacity){
-	this->m_CurSize = newCapacity;
-}
-unsigned int DIY_Vector::GetCapacity(void) {
-	return m_CurSize;
-}
-
-void DIY_Vector::clear()
+bool STL_Vector::FindPersonByID(sPerson &person, unsigned long long uniqueID)
 {
-	// Delete data
-	delete[] this->m_Data;
-
-	//Reset Everithing
-	unsigned int m_CurSize = 0;
-	this->m_Data = new sPerson[this->m_CurSize];
-	this->m_next = 0;
-}
-
-unsigned int DIY_Vector::GetSize(void)
-{
-	return m_next;
-}
-
-bool DIY_Vector::FindPersonByID(sPerson &person, unsigned long long uniqueID)
-{
-	for (int i = 0; i < this->GetSize(); i++)
+	for (int i = 0; i < this->mVec_Person.size(); i++)
 	{
 		
-		if(this->m_Data[i].uniqueID == uniqueID)
+		if(this->mVec_Person[i].uniqueID == uniqueID)
 		{
-			person = this->m_Data[i];
+			person = this->mVec_Person[i];
 			return true;
 		}
 	}
@@ -330,14 +278,14 @@ bool DIY_Vector::FindPersonByID(sPerson &person, unsigned long long uniqueID)
 	return false;
 }
 
-bool DIY_Vector::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, int maxPeopleToReturn)
+bool STL_Vector::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, int maxPeopleToReturn)
 {
 	int count = 0;
-	for (int i = 0; i < this->GetSize(); i++)
+	for (int i = 0; i < this->mVec_Person.size(); i++)
 	{
-		if (distance(this->m_Data[i].location, location) <= radius)
+		if (distance(this->mVec_Person[i].location, location) <= radius)
 		{
-			vecPeople.push_back(this->m_Data[i]);
+			vecPeople.push_back(this->mVec_Person[i]);
 			count++;
 			if (count == maxPeopleToReturn)
 			{
@@ -356,14 +304,14 @@ bool DIY_Vector::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, fl
     }
 }
 
-bool DIY_Vector::FindPeople(std::vector<sPerson> &vecPeople, float minHealth, float maxHealth, int maxPeopleToReturn)
+bool STL_Vector::FindPeople(std::vector<sPerson> &vecPeople, float minHealth, float maxHealth, int maxPeopleToReturn)
 {
     int count = 0;
-    for (int i = 0; i < this->GetSize(); i++)
+    for (int i = 0; i < this->mVec_Person.size(); i++)
     {
-        if (this->m_Data[i].health >= minHealth && this->m_Data[i].health <= maxHealth)
+        if (this->mVec_Person[i].health >= minHealth && this->mVec_Person[i].health <= maxHealth)
         {
-            vecPeople.push_back(this->m_Data[i]);
+            vecPeople.push_back(this->mVec_Person[i]);
             count++;
             if (count == maxPeopleToReturn)
             {
@@ -382,16 +330,16 @@ bool DIY_Vector::FindPeople(std::vector<sPerson> &vecPeople, float minHealth, fl
     }
 }
 
-bool DIY_Vector::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, float minHealth, float maxHealth, int maxPeopleToReturn)
+bool STL_Vector::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, float minHealth, float maxHealth, int maxPeopleToReturn)
 {
 	int count = 0;
-	for (int i = 0; i < this->GetSize(); i++)
+	for (int i = 0; i < this->mVec_Person.size(); i++)
 	{
-		if (this->m_Data[i].health >= minHealth && this->m_Data[i].health <= maxHealth)
+		if (this->mVec_Person[i].health >= minHealth && this->mVec_Person[i].health <= maxHealth)
 		{
-			if (distance(this->m_Data[i].location, location) <= radius)
+			if (distance(this->mVec_Person[i].location, location) <= radius)
 			{
-				vecPeople.push_back(this->m_Data[i]);
+				vecPeople.push_back(this->mVec_Person[i]);
 				count++;
 				if (count == maxPeopleToReturn)
 				{
@@ -411,352 +359,7 @@ bool DIY_Vector::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, fl
 	}
 }
 
-bool DIY_Vector::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
+bool STL_Vector::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
 {
-	Qsort(0, GetSize() - 1, sortType);
-	for (int i = 0; i < this->GetSize(); i++)
-	{
-		vecPeople.push_back(this->m_Data[i]);
-	}
-
 	return true;
-}
-
-
-
-
-static int recLevel = 0;
-void DIY_Vector::Qsort(int left, int right, eSortType type)
-{
-
-	int i = left;
-	int j = right;
-    sPerson tmp;
-    sPerson pivot = m_Data[(left + right) / 2];
-    recLevel++;
-
-    switch (type)
-    {
-    case ASC_FIRST_THEN_LAST:
-    {
-        while (i <= j) {
-			while (m_Data[i].first < pivot.first) {
-				i++;
-			}
-			while (m_Data[j].first > pivot.first) {
-				j--;
-			}
-
-            if (i <= j) {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
-
-		// Recursion
-		if (left < j) {
-			Qsort(left, j, ASC_FIRST_THEN_LAST);
-		}
-
-		if (i < right) {
-			Qsort(i, right, ASC_FIRST_THEN_LAST);
-		}
-        if (recLevel == 1)
-        {
-            bool IsSortingFinished = false;
-
-            while (!IsSortingFinished)
-            {
-                IsSortingFinished = true;
-
-                size_t length = this->GetSize() - 1;   
-                for (size_t i = 0; i < length; i++)
-                {
-                    if (m_Data[i].last > m_Data[i + 1].last && m_Data[i].first == m_Data[i + 1].first)
-                    {
-                        tmp = m_Data[i];
-                        m_Data[i] = m_Data[i + 1];
-                        m_Data[i + 1] = tmp;
-                        IsSortingFinished = false;
-                    }
-                }
-            }
-        }
-    }
-    break;
-    case DESC_FIRST_THEN_LAST:
-    {
-
-        while (i <= j)
-        {
-            while (m_Data[i].first > pivot.first)
-                i++;
-
-            while (m_Data[j].first < pivot.first)
-                j--;
-
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
-
-		if (left < j) {
-			Qsort(left, j, DESC_FIRST_THEN_LAST);
-		}
-
-		if (i < right) {
-			Qsort(i, right, DESC_FIRST_THEN_LAST);
-		}
-        if (recLevel == 1)
-        {
-            bool IsSortingFinished = false;
-
-            while (!IsSortingFinished)
-            {
-                // Flag to exit
-                IsSortingFinished = true;
-
-                size_t length = this->GetSize() - 1;  
-                for (size_t i = 0; i < length; i++)
-                {
-                    if (m_Data[i].last < m_Data[i + 1].last && m_Data[i].first == m_Data[i + 1].first)
-                    {
-                        tmp = m_Data[i];
-                        m_Data[i] = m_Data[i + 1];
-                        m_Data[i + 1] = tmp;
-                        IsSortingFinished = false;
-                    }
-                }
-            }
-        }
-    }
-        break;
-    case ASC_LAST_THEN_FIRST:
-    {
-        while (i <= j)
-        {
-            while (m_Data[i].last < pivot.last)
-                i++;
-
-            while (m_Data[j].last > pivot.last)
-                j--;
-
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
-
-		if (left < j) {
-			Qsort(left, j, ASC_LAST_THEN_FIRST);
-		}
-
-		if (i < right) {
-			Qsort(i, right, ASC_LAST_THEN_FIRST);
-		}
-
-        if (recLevel == 1)
-        {
-            bool IsSortingFinished = false;
-
-            while (!IsSortingFinished)
-            {
-                IsSortingFinished = true;
-                size_t length = this->GetSize() - 1;   
-                for (size_t i = 0; i < length; i++)
-                {
-                    if (m_Data[i].first > m_Data[i + 1].first && m_Data[i].last == m_Data[i + 1].last)
-                    {
-                        tmp = m_Data[i];
-                        m_Data[i] = m_Data[i + 1];
-                        m_Data[i + 1] = tmp;
-                        IsSortingFinished = false;
-                    }
-                }
-            }
-        }
-    }
-        break;
-    case DESC_LAST_THEN_FIRST:
-    {
-        while (i <= j)
-        {
-            while (m_Data[i].last > pivot.last)
-                i++;
-
-            while (m_Data[j].last < pivot.last)
-                j--;
-
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
-
-		if (left < j) {
-			Qsort(left, j, DESC_LAST_THEN_FIRST);
-		}
-
-		if (i < right) {
-			Qsort(i, right, DESC_LAST_THEN_FIRST);
-		}
-        if (recLevel == 1)
-        {
-            bool IsSortingFinished = false;
-
-            while (!IsSortingFinished)
-            {
-                IsSortingFinished = true;
-
-                size_t length = this->GetSize() - 1;   
-                for (size_t i = 0; i < length; i++)
-                {
-                    if (m_Data[i].first < m_Data[i + 1].first && m_Data[i].last == m_Data[i + 1].last)
-                    {
-                        tmp = m_Data[i];
-                        m_Data[i] = m_Data[i + 1];
-                        m_Data[i + 1] = tmp;
-                        IsSortingFinished = false;
-                    }
-                }
-            }
-        }
-    }
-        break;
-    case ASC_BY_ID:
-    {
-        while (i <= j)
-        {
-            while (m_Data[i].uniqueID < pivot.uniqueID)
-                i++;
-
-            while (m_Data[j].uniqueID > pivot.uniqueID)
-                j--;
-
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
-
-		if (left < j) {
-			Qsort(left, j, ASC_BY_ID);
-		}
-
-		if (i < right) {
-			Qsort(i, right, ASC_BY_ID);
-		}
-    }
-        break;
-    case DESC_BY_ID:
-    {
-        while (i <= j)
-        {
-            while (m_Data[i].uniqueID > pivot.uniqueID)
-                i++;
-
-            while (m_Data[j].uniqueID < pivot.uniqueID)
-                j--;
-
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
-		if (left < j) {
-			Qsort(left, j, DESC_BY_ID);
-		}
-
-		if (i < right) {
-			Qsort(i, right, DESC_BY_ID);
-		}
-    }
-        break;
-    case ASC_BY_HEALTH:
-    {
-        while (i <= j)
-        {
-            while (m_Data[i].health < pivot.health)
-                i++;
-
-            while (m_Data[j].health > pivot.health)
-                j--;
-
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
-
-		if (left < j) {
-			Qsort(left, j, ASC_BY_HEALTH);
-		}
-
-		if (i < right) {
-			Qsort(i, right, ASC_BY_HEALTH);
-		}
-    }
-        break;
-    case DESC_BY_HEALTH:
-    {
-        while (i <= j)
-        {
-            while (m_Data[i].health > pivot.health)
-                i++;
-
-            while (m_Data[j].health < pivot.health)
-                j--;
-
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
-
-		if (left < j) {
-			Qsort(left, j, DESC_BY_HEALTH);
-		}
-
-		if (i < right) {
-			Qsort(i, right, DESC_BY_HEALTH);
-		}
-    }
-        break;
-    default:
-        break;
-    }
-
-    recLevel--;
 }
