@@ -12,16 +12,14 @@
 std::map<std::string, int> test;
 
 
-//   ________  ___      ___    ___      ___      ___ _______   ________ _________  ________  ________     
-//  |\   ___ \|\  \    |\  \  /  /|    |\  \    /  /|\  ___ \ |\   ____\\___   ___\\   __  \|\   __  \    
-//  \ \  \_|\ \ \  \   \ \  \/  / /    \ \  \  /  / | \   __/|\ \  \___\|___ \  \_\ \  \|\  \ \  \|\  \   
-//   \ \  \ \\ \ \  \   \ \    / /      \ \  \/  / / \ \  \_|/_\ \  \       \ \  \ \ \  \\\  \ \   _  _\  
-//    \ \  \_\\ \ \  \   \/  /  /        \ \    / /   \ \  \_|\ \ \  \____   \ \  \ \ \  \\\  \ \  \\  \| 
-//     \ \_______\ \__\__/  / /           \ \__/ /     \ \_______\ \_______\  \ \__\ \ \_______\ \__\\ _\ 
-//      \|_______|\|__|\___/ /             \|__|/       \|_______|\|_______|   \|__|  \|_______|\|__|\|__|
-//                    \|___|/                                                                             
-//                                                                                                        
-// 
+//   ________  _________  ___               ___      ___ _______   ________ _________  ________  ________     
+//  |\   ____\|\___   ___\\  \             |\  \    /  /|\  ___ \ |\   ____\\___   ___\\   __  \|\   __  \    
+//  \ \  \___|\|___ \  \_\ \  \            \ \  \  /  / | \   __/|\ \  \___\|___ \  \_\ \  \|\  \ \  \|\  \   
+//   \ \_____  \   \ \  \ \ \  \            \ \  \/  / / \ \  \_|/_\ \  \       \ \  \ \ \  \\\  \ \   _  _\  
+//    \|____|\  \   \ \  \ \ \  \____        \ \    / /   \ \  \_|\ \ \  \____   \ \  \ \ \  \\\  \ \  \\  \| 
+//      ____\_\  \   \ \__\ \ \_______\       \ \__/ /     \ \_______\ \_______\  \ \__\ \ \_______\ \__\\ _\ 
+//     |\_________\   \|__|  \|_______|        \|__|/       \|_______|\|_______|   \|__|  \|_______|\|__|\|__|
+//     \|_________|       
 
 float distance(sPoint point, sPoint point2)
 {
@@ -510,16 +508,13 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
             }
         }
 
-        // Recursion
-		//if (left < j) {
-		//	Qsort(j, DESC_FIRST_THEN_LAST);
-		//}
+		if (left < j) {
+			Qsort(left, j, DESC_FIRST_THEN_LAST);
+		}
 
-		//if (i < right) {
-		//	Qsort(right, DESC_FIRST_THEN_LAST);
-		//}
-
-        // Now lets sort them by last name (bubble sort...)
+		if (i < right) {
+			Qsort(i, right, DESC_FIRST_THEN_LAST);
+		}
         if (recLevel == 1)
         {
             bool IsSortingFinished = false;
@@ -529,7 +524,7 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
                 // Flag to exit
                 IsSortingFinished = true;
 
-                size_t length = this->GetSize() - 1;   // Avoid testing the lest element against nothing...
+                size_t length = this->GetSize() - 1;  
                 for (size_t i = 0; i < length; i++)
                 {
                     if (m_Data[i].last < m_Data[i + 1].last && m_Data[i].first == m_Data[i + 1].first)
@@ -564,24 +559,22 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
             }
         }
 
-        // Recursion
-        //if (left < j)
-        //    Qsort(ASC_LAST_THEN_FIRST);
+		if (left < j) {
+			Qsort(left, j, ASC_LAST_THEN_FIRST);
+		}
 
-        //if (i < right)
-        //    Qsort(ASC_LAST_THEN_FIRST);
+		if (i < right) {
+			Qsort(i, right, ASC_LAST_THEN_FIRST);
+		}
 
-        // Now lets sort them by first name (bubble sort...)
         if (recLevel == 1)
         {
             bool IsSortingFinished = false;
 
             while (!IsSortingFinished)
             {
-                // Flag to exit
                 IsSortingFinished = true;
-
-                size_t length = this->GetSize() - 1;   // Avoid testing the lest element against nothing...
+                size_t length = this->GetSize() - 1;   
                 for (size_t i = 0; i < length; i++)
                 {
                     if (m_Data[i].first > m_Data[i + 1].first && m_Data[i].last == m_Data[i + 1].last)
@@ -598,8 +591,6 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
         break;
     case DESC_LAST_THEN_FIRST:
     {
-        // Quick sort for last names
-        // Partition
         while (i <= j)
         {
             while (m_Data[i].last > pivot.last)
@@ -618,24 +609,22 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
             }
         }
 
-        // Recursion
-        //if (left < j)
-        //    Qsort(DESC_LAST_THEN_FIRST);
+		if (left < j) {
+			Qsort(left, j, DESC_LAST_THEN_FIRST);
+		}
 
-        //if (i < right)
-        //    Qsort(DESC_LAST_THEN_FIRST);
-
-        // Now lets sort them by first name (bubble sort...)
+		if (i < right) {
+			Qsort(i, right, DESC_LAST_THEN_FIRST);
+		}
         if (recLevel == 1)
         {
             bool IsSortingFinished = false;
 
             while (!IsSortingFinished)
             {
-                // Flag to exit
                 IsSortingFinished = true;
 
-                size_t length = this->GetSize() - 1;   // Avoid testing the lest element against nothing...
+                size_t length = this->GetSize() - 1;   
                 for (size_t i = 0; i < length; i++)
                 {
                     if (m_Data[i].first < m_Data[i + 1].first && m_Data[i].last == m_Data[i + 1].last)
@@ -652,8 +641,6 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
         break;
     case ASC_BY_ID:
     {
-        // Quick sort for ID
-        // Partition
         while (i <= j)
         {
             while (m_Data[i].uniqueID < pivot.uniqueID)
@@ -672,18 +659,17 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
             }
         }
 
-        // Recursion
-        //if (left < j)
-        //    Qsort(ASC_BY_ID);
+		if (left < j) {
+			Qsort(left, j, ASC_BY_ID);
+		}
 
-        //if (i < right)
-        //    Qsort(ASC_BY_ID);
+		if (i < right) {
+			Qsort(i, right, ASC_BY_ID);
+		}
     }
         break;
     case DESC_BY_ID:
     {
-        // Quick sort for ID
-        // Partition
         while (i <= j)
         {
             while (m_Data[i].uniqueID > pivot.uniqueID)
@@ -741,8 +727,6 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
         break;
     case DESC_BY_HEALTH:
     {
-        // Quick sort for health
-        // Partition
         while (i <= j)
         {
             while (m_Data[i].health > pivot.health)

@@ -427,21 +427,22 @@ bool DIY_Vector::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
 
 
 
-static int recLevel = 0;
+
+static int rec = 0;
 void DIY_Vector::Qsort(int left, int right, eSortType type)
 {
 
 	int i = left;
 	int j = right;
-    sPerson tmp;
-    sPerson pivot = m_Data[(left + right) / 2];
-    recLevel++;
+	sPerson tmp;
+	sPerson pivot = m_Data[(left + right) / 2];
+	rec++;
 
-    switch (type)
-    {
-    case ASC_FIRST_THEN_LAST:
-    {
-        while (i <= j) {
+	switch (type)
+	{
+	case ASC_FIRST_THEN_LAST:
+	{
+		while (i <= j) {
 			while (m_Data[i].first < pivot.first) {
 				i++;
 			}
@@ -449,14 +450,14 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 				j--;
 			}
 
-            if (i <= j) {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
+			if (i <= j) {
+				tmp = m_Data[i];
+				m_Data[i] = m_Data[j];
+				m_Data[j] = tmp;
+				i++;
+				j--;
+			}
+		}
 
 		// Recursion
 		if (left < j) {
@@ -466,241 +467,229 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 		if (i < right) {
 			Qsort(i, right, ASC_FIRST_THEN_LAST);
 		}
-        if (recLevel == 1)
-        {
-            bool IsSortingFinished = false;
+		if (rec == 1)
+		{
+			bool IsSortingFinished = false;
 
-            while (!IsSortingFinished)
-            {
-                IsSortingFinished = true;
+			while (!IsSortingFinished)
+			{
+				IsSortingFinished = true;
 
-                size_t length = this->GetSize() - 1;   
-                for (size_t i = 0; i < length; i++)
-                {
-                    if (m_Data[i].last > m_Data[i + 1].last && m_Data[i].first == m_Data[i + 1].first)
-                    {
-                        tmp = m_Data[i];
-                        m_Data[i] = m_Data[i + 1];
-                        m_Data[i + 1] = tmp;
-                        IsSortingFinished = false;
-                    }
-                }
-            }
-        }
-    }
-    break;
-    case DESC_FIRST_THEN_LAST:
-    {
+				size_t length = this->GetSize() - 1;
+				for (size_t i = 0; i < length; i++)
+				{
+					if (m_Data[i].last > m_Data[i + 1].last && m_Data[i].first == m_Data[i + 1].first)
+					{
+						tmp = m_Data[i];
+						m_Data[i] = m_Data[i + 1];
+						m_Data[i + 1] = tmp;
+						IsSortingFinished = false;
+					}
+				}
+			}
+		}
+	}
+	break;
+	case DESC_FIRST_THEN_LAST:
+	{
 
-        while (i <= j)
-        {
-            while (m_Data[i].first > pivot.first)
-                i++;
+		while (i <= j)
+		{
+			while (m_Data[i].first > pivot.first)
+				i++;
 
-            while (m_Data[j].first < pivot.first)
-                j--;
+			while (m_Data[j].first < pivot.first)
+				j--;
 
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
+			if (i <= j)
+			{
+				tmp = m_Data[i];
+				m_Data[i] = m_Data[j];
+				m_Data[j] = tmp;
+				i++;
+				j--;
+			}
+		}
 
-        // Recursion
-		//if (left < j) {
-		//	Qsort(j, DESC_FIRST_THEN_LAST);
-		//}
+		if (left < j) {
+			Qsort(left, j, DESC_FIRST_THEN_LAST);
+		}
 
-		//if (i < right) {
-		//	Qsort(right, DESC_FIRST_THEN_LAST);
-		//}
+		if (i < right) {
+			Qsort(i, right, DESC_FIRST_THEN_LAST);
+		}
+		if (rec == 1)
+		{
+			bool IsSortingFinished = false;
 
-        // Now lets sort them by last name (bubble sort...)
-        if (recLevel == 1)
-        {
-            bool IsSortingFinished = false;
+			while (!IsSortingFinished)
+			{
+				// Flag to exit
+				IsSortingFinished = true;
 
-            while (!IsSortingFinished)
-            {
-                // Flag to exit
-                IsSortingFinished = true;
+				size_t length = this->GetSize() - 1;
+				for (size_t i = 0; i < length; i++)
+				{
+					if (m_Data[i].last < m_Data[i + 1].last && m_Data[i].first == m_Data[i + 1].first)
+					{
+						tmp = m_Data[i];
+						m_Data[i] = m_Data[i + 1];
+						m_Data[i + 1] = tmp;
+						IsSortingFinished = false;
+					}
+				}
+			}
+		}
+	}
+	break;
+	case ASC_LAST_THEN_FIRST:
+	{
+		while (i <= j)
+		{
+			while (m_Data[i].last < pivot.last)
+				i++;
 
-                size_t length = this->GetSize() - 1;   // Avoid testing the lest element against nothing...
-                for (size_t i = 0; i < length; i++)
-                {
-                    if (m_Data[i].last < m_Data[i + 1].last && m_Data[i].first == m_Data[i + 1].first)
-                    {
-                        tmp = m_Data[i];
-                        m_Data[i] = m_Data[i + 1];
-                        m_Data[i + 1] = tmp;
-                        IsSortingFinished = false;
-                    }
-                }
-            }
-        }
-    }
-        break;
-    case ASC_LAST_THEN_FIRST:
-    {
-        while (i <= j)
-        {
-            while (m_Data[i].last < pivot.last)
-                i++;
+			while (m_Data[j].last > pivot.last)
+				j--;
 
-            while (m_Data[j].last > pivot.last)
-                j--;
+			if (i <= j)
+			{
+				tmp = m_Data[i];
+				m_Data[i] = m_Data[j];
+				m_Data[j] = tmp;
+				i++;
+				j--;
+			}
+		}
 
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
+		if (left < j) {
+			Qsort(left, j, ASC_LAST_THEN_FIRST);
+		}
 
-        // Recursion
-        //if (left < j)
-        //    Qsort(ASC_LAST_THEN_FIRST);
+		if (i < right) {
+			Qsort(i, right, ASC_LAST_THEN_FIRST);
+		}
 
-        //if (i < right)
-        //    Qsort(ASC_LAST_THEN_FIRST);
+		if (rec == 1)
+		{
+			bool IsSortingFinished = false;
 
-        // Now lets sort them by first name (bubble sort...)
-        if (recLevel == 1)
-        {
-            bool IsSortingFinished = false;
+			while (!IsSortingFinished)
+			{
+				IsSortingFinished = true;
+				size_t length = this->GetSize() - 1;
+				for (size_t i = 0; i < length; i++)
+				{
+					if (m_Data[i].first > m_Data[i + 1].first && m_Data[i].last == m_Data[i + 1].last)
+					{
+						tmp = m_Data[i];
+						m_Data[i] = m_Data[i + 1];
+						m_Data[i + 1] = tmp;
+						IsSortingFinished = false;
+					}
+				}
+			}
+		}
+	}
+	break;
+	case DESC_LAST_THEN_FIRST:
+	{
+		while (i <= j)
+		{
+			while (m_Data[i].last > pivot.last)
+				i++;
 
-            while (!IsSortingFinished)
-            {
-                // Flag to exit
-                IsSortingFinished = true;
+			while (m_Data[j].last < pivot.last)
+				j--;
 
-                size_t length = this->GetSize() - 1;   // Avoid testing the lest element against nothing...
-                for (size_t i = 0; i < length; i++)
-                {
-                    if (m_Data[i].first > m_Data[i + 1].first && m_Data[i].last == m_Data[i + 1].last)
-                    {
-                        tmp = m_Data[i];
-                        m_Data[i] = m_Data[i + 1];
-                        m_Data[i + 1] = tmp;
-                        IsSortingFinished = false;
-                    }
-                }
-            }
-        }
-    }
-        break;
-    case DESC_LAST_THEN_FIRST:
-    {
-        // Quick sort for last names
-        // Partition
-        while (i <= j)
-        {
-            while (m_Data[i].last > pivot.last)
-                i++;
+			if (i <= j)
+			{
+				tmp = m_Data[i];
+				m_Data[i] = m_Data[j];
+				m_Data[j] = tmp;
+				i++;
+				j--;
+			}
+		}
 
-            while (m_Data[j].last < pivot.last)
-                j--;
+		if (left < j) {
+			Qsort(left, j, DESC_LAST_THEN_FIRST);
+		}
 
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
+		if (i < right) {
+			Qsort(i, right, DESC_LAST_THEN_FIRST);
+		}
+		if (rec == 1)
+		{
+			bool IsSortingFinished = false;
 
-        // Recursion
-        //if (left < j)
-        //    Qsort(DESC_LAST_THEN_FIRST);
+			while (!IsSortingFinished)
+			{
+				IsSortingFinished = true;
 
-        //if (i < right)
-        //    Qsort(DESC_LAST_THEN_FIRST);
+				size_t length = this->GetSize() - 1;
+				for (size_t i = 0; i < length; i++)
+				{
+					if (m_Data[i].first < m_Data[i + 1].first && m_Data[i].last == m_Data[i + 1].last)
+					{
+						tmp = m_Data[i];
+						m_Data[i] = m_Data[i + 1];
+						m_Data[i + 1] = tmp;
+						IsSortingFinished = false;
+					}
+				}
+			}
+		}
+	}
+	break;
+	case ASC_BY_ID:
+	{
+		while (i <= j)
+		{
+			while (m_Data[i].uniqueID < pivot.uniqueID)
+				i++;
 
-        // Now lets sort them by first name (bubble sort...)
-        if (recLevel == 1)
-        {
-            bool IsSortingFinished = false;
+			while (m_Data[j].uniqueID > pivot.uniqueID)
+				j--;
 
-            while (!IsSortingFinished)
-            {
-                // Flag to exit
-                IsSortingFinished = true;
+			if (i <= j)
+			{
+				tmp = m_Data[i];
+				m_Data[i] = m_Data[j];
+				m_Data[j] = tmp;
+				i++;
+				j--;
+			}
+		}
 
-                size_t length = this->GetSize() - 1;   // Avoid testing the lest element against nothing...
-                for (size_t i = 0; i < length; i++)
-                {
-                    if (m_Data[i].first < m_Data[i + 1].first && m_Data[i].last == m_Data[i + 1].last)
-                    {
-                        tmp = m_Data[i];
-                        m_Data[i] = m_Data[i + 1];
-                        m_Data[i + 1] = tmp;
-                        IsSortingFinished = false;
-                    }
-                }
-            }
-        }
-    }
-        break;
-    case ASC_BY_ID:
-    {
-        // Quick sort for ID
-        // Partition
-        while (i <= j)
-        {
-            while (m_Data[i].uniqueID < pivot.uniqueID)
-                i++;
+		if (left < j) {
+			Qsort(left, j, ASC_BY_ID);
+		}
 
-            while (m_Data[j].uniqueID > pivot.uniqueID)
-                j--;
+		if (i < right) {
+			Qsort(i, right, ASC_BY_ID);
+		}
+	}
+	break;
+	case DESC_BY_ID:
+	{
+		while (i <= j)
+		{
+			while (m_Data[i].uniqueID > pivot.uniqueID)
+				i++;
 
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
+			while (m_Data[j].uniqueID < pivot.uniqueID)
+				j--;
 
-        // Recursion
-        //if (left < j)
-        //    Qsort(ASC_BY_ID);
-
-        //if (i < right)
-        //    Qsort(ASC_BY_ID);
-    }
-        break;
-    case DESC_BY_ID:
-    {
-        // Quick sort for ID
-        // Partition
-        while (i <= j)
-        {
-            while (m_Data[i].uniqueID > pivot.uniqueID)
-                i++;
-
-            while (m_Data[j].uniqueID < pivot.uniqueID)
-                j--;
-
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
+			if (i <= j)
+			{
+				tmp = m_Data[i];
+				m_Data[i] = m_Data[j];
+				m_Data[j] = tmp;
+				i++;
+				j--;
+			}
+		}
 		if (left < j) {
 			Qsort(left, j, DESC_BY_ID);
 		}
@@ -708,27 +697,27 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 		if (i < right) {
 			Qsort(i, right, DESC_BY_ID);
 		}
-    }
-        break;
-    case ASC_BY_HEALTH:
-    {
-        while (i <= j)
-        {
-            while (m_Data[i].health < pivot.health)
-                i++;
+	}
+	break;
+	case ASC_BY_HEALTH:
+	{
+		while (i <= j)
+		{
+			while (m_Data[i].health < pivot.health)
+				i++;
 
-            while (m_Data[j].health > pivot.health)
-                j--;
+			while (m_Data[j].health > pivot.health)
+				j--;
 
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
+			if (i <= j)
+			{
+				tmp = m_Data[i];
+				m_Data[i] = m_Data[j];
+				m_Data[j] = tmp;
+				i++;
+				j--;
+			}
+		}
 
 		if (left < j) {
 			Qsort(left, j, ASC_BY_HEALTH);
@@ -737,29 +726,27 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 		if (i < right) {
 			Qsort(i, right, ASC_BY_HEALTH);
 		}
-    }
-        break;
-    case DESC_BY_HEALTH:
-    {
-        // Quick sort for health
-        // Partition
-        while (i <= j)
-        {
-            while (m_Data[i].health > pivot.health)
-                i++;
+	}
+	break;
+	case DESC_BY_HEALTH:
+	{
+		while (i <= j)
+		{
+			while (m_Data[i].health > pivot.health)
+				i++;
 
-            while (m_Data[j].health < pivot.health)
-                j--;
+			while (m_Data[j].health < pivot.health)
+				j--;
 
-            if (i <= j)
-            {
-                tmp = m_Data[i];
-                m_Data[i] = m_Data[j];
-                m_Data[j] = tmp;
-                i++;
-                j--;
-            }
-        }
+			if (i <= j)
+			{
+				tmp = m_Data[i];
+				m_Data[i] = m_Data[j];
+				m_Data[j] = tmp;
+				i++;
+				j--;
+			}
+		}
 
 		if (left < j) {
 			Qsort(left, j, DESC_BY_HEALTH);
@@ -768,11 +755,11 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 		if (i < right) {
 			Qsort(i, right, DESC_BY_HEALTH);
 		}
-    }
-        break;
-    default:
-        break;
-    }
+	}
+	break;
+	default:
+		break;
+	}
 
-    recLevel--;
+	rec--;
 }
