@@ -6,10 +6,10 @@
 #include <fstream>
 #include "iPersonMotron.h"
 #include "STL_Vector.h"
+#include <algorithm>
 #include <iostream>
 
 #include <map>
-std::map<std::string, int> test;
 
 
 //   ________  _________  ___               ___      ___ _______   ________ _________  ________  ________     
@@ -25,6 +25,60 @@ float distance(sPoint point, sPoint point2)
 {
 	return std::sqrt(pow((point.x - point2.x), 2) + pow((point.y - point2.y), 2) + pow((point.z - point2.z), 2));
 }
+
+bool sortByFirstASC(sPerson& a, sPerson& b) { 
+	if (a.first == b.first) {
+		return a.last < b.last;
+	}
+	else {
+		return a.first < b.first;
+	}
+}
+
+bool sortByFirstDESC(sPerson& a, sPerson& b) {
+	if (a.first == b.first) {
+		return a.last > b.last;
+	}
+	else {
+		return a.first > b.first;
+	}
+}
+
+bool sortByLastASC(sPerson& a, sPerson& b) {
+	if (a.last == b.last) {
+		return a.first < b.first;
+	}
+	else {
+		return a.last < b.last;
+	}
+}
+
+bool sortByLastDESC(sPerson& a, sPerson& b) {
+	if (a.last == b.last) {
+		return a.first > b.first;
+	}
+	else {
+		return a.last > b.last;
+	}
+}
+
+
+bool sortByIdASC(sPerson& a, sPerson& b) {
+	return a.uniqueID < b.uniqueID;
+}
+
+bool sortByIdDESC(sPerson& a, sPerson& b) {
+	return a.uniqueID > b.uniqueID;
+}
+
+bool sortByHpASC(sPerson& a, sPerson& b) {
+	return a.health < b.health;
+}
+
+bool sortByHpDESC(sPerson& a, sPerson& b) {
+	return a.health > b.health;
+}
+
 
 //Random float generator
 float RandomFloat(float a, float b) {
@@ -60,7 +114,6 @@ bool STL_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
 	std::string tershold;
 	while (!file.eof())
 	{
-		int GenerateNumber = rand() % 1 + 10;
 		tershold = "";
 		file >> tershold;  
 		if (tershold != "") {
@@ -111,10 +164,10 @@ bool STL_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
 			int r = rand() % 3 + 1;
 			for(int i = 0; i < r; i ++){
 				//int randIndex = rand() % this->GetSize() + 1;
-				this->m_Data[indx].last = tershold;
-				this->m_Data[indx].uniqueID = indx;
+				this->mVec_Person[indx].last = tershold;
+				this->mVec_Person[indx].uniqueID = indx;
 				indx++;
-				if (indx > this->GetSize()) { return true; }
+				if (indx > this->GetSize() - 1) { return true; }
 			}
 		}
 		file3 >> tershold;
@@ -151,7 +204,7 @@ void STL_Vector::GenerateData(std::string first, int number)
 		location.y = y;
 		location.z = z;
 		curPerson.location = location;
-		this->PushBack(curPerson);
+		this->mVec_Person.push_back(curPerson);
 	}
 	
 }
@@ -164,7 +217,7 @@ bool STL_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson perso
 	if (personToMatch.first != "" && personToMatch.last == "")
 	{
 
-		for (int i = 0; i < this->mVec_Person.size()(); i++)
+		for (int i = 0; i < this->mVec_Person.size(); i++)
 		{
 			if (this->mVec_Person[i].first == personToMatch.first)
 			{
@@ -255,12 +308,33 @@ bool STL_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<s
 	
 }
 
+bool STL_Vector::GetAt(unsigned int index, sPerson & thePerson)
+{
+	if (index < this->mVec_Person.size())
+	{
+		thePerson = this->mVec_Person[index];
+		return true;
+	}
+
+	return false;
+}
+
 
 
 
 eContainerType STL_Vector::getContainerType(void)
 {
     return STD_VECTOR;
+}
+
+unsigned int STL_Vector::GetSize(void)
+{
+	return this->mVec_Person.size();
+}
+
+void STL_Vector::PushBack(sPerson person)
+{
+	this->mVec_Person.push_back(person);
 }
 
 bool STL_Vector::FindPersonByID(sPerson &person, unsigned long long uniqueID)
@@ -361,5 +435,43 @@ bool STL_Vector::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, fl
 
 bool STL_Vector::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
 {
-	return true;
+	switch (sortType)
+	{
+	case iPersonMotron::ASC_FIRST_THEN_LAST:
+		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByFirstASC);
+		//std::sort(mVec_Person.begin(), mVec_Person.end(), sortByLastASC);
+		return true;
+		break;
+	case iPersonMotron::DESC_FIRST_THEN_LAST:
+		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByFirstDESC);
+		return true;
+		break;
+	case iPersonMotron::ASC_LAST_THEN_FIRST:
+		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByLastASC);
+		return true;
+		break;
+	case iPersonMotron::DESC_LAST_THEN_FIRST:
+		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByLastDESC);
+		return true;
+		break;
+	case iPersonMotron::ASC_BY_ID:
+		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByIdASC);
+		return true;
+		break;
+	case iPersonMotron::DESC_BY_ID:
+		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByIdDESC);
+		return true;
+		break;
+	case iPersonMotron::ASC_BY_HEALTH:
+		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByHpASC);
+		return true;
+		break;
+	case iPersonMotron::DESC_BY_HEALTH:
+		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByHpDESC);
+		return true;
+		break;
+	default:
+		return false;
+		break;
+	}
 }

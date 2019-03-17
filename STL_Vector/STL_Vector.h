@@ -1,5 +1,4 @@
-#ifndef _STL_Vector_HG_
-#define _STL_Vector_HG_
+#pragma once
 
 
 
@@ -44,24 +43,16 @@ public:
 	bool GetPerformanceFromLastCall(sPerfData &callStats) { return false; }
 	eContainerType getContainerType(void);
 
-//    void SetCapacity(unsigned int newCapacity);
-//    unsigned int GetSize(void);
-//    unsigned int GetCapacity(void);
-//    void clear();
-//
-//    void PushBack(sPerson person);
-//    void InsertAt(unsigned int index, sPerson person);
+	unsigned int GetSize(void);
+	void PushBack(sPerson person);
 
 private:
 
     std::vector<sPerson> mVec_Person;
-	void Qsort(int left, int right, eSortType type);
-
 	//Generate n random data for all people
 	//Called inside LoadDataFilesIntoContainer();
 	void GenerateData(std::string first, int number = 10);
 };
 
-#endif
 
 
