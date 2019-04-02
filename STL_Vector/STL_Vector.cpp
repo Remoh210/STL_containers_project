@@ -92,7 +92,6 @@ float RandomFloat(float a, float b) {
 STL_Vector::STL_Vector()
 
 {
-    //this->mVec_Person.clear();
 }
 
 STL_Vector::~STL_Vector()
@@ -111,17 +110,17 @@ bool STL_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
 	{
 		return false;
 	}
-	std::string tershold;
+	std::string treshold;
 	while (!file.eof())
 	{
-		tershold = "";
-		file >> tershold;  
-		if (tershold != "") {
-			GenerateData(tershold);
+		treshold = "";
+		file >> treshold;  
+		if (treshold != "") {
+			GenerateData(treshold);
 		}
-		file >> tershold;  
-		file >> tershold;  
-		file >> tershold;
+		file >> treshold;  
+		file >> treshold;  
+		file >> treshold;
 	}
 	file.close();
 
@@ -134,14 +133,14 @@ bool STL_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
 	}
 	while (!file2.eof())
 	{
-		tershold = "";
-		file2 >> tershold;
-		if (tershold != "") {
-			GenerateData(tershold);
+		treshold = "";
+		file2 >> treshold;
+		if (treshold != "") {
+			GenerateData(treshold);
 		}
-		file2 >> tershold;
-		file2 >> tershold;
-		file2 >> tershold;
+		file2 >> treshold;
+		file2 >> treshold;
+		file2 >> treshold;
 	}
 	file.close();
 
@@ -157,22 +156,22 @@ bool STL_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
 	int indx = 0;
 	while (!file3.eof())
 	{
-		tershold = "";
-		file3 >> tershold;
-		if (tershold != "") {
+		treshold = "";
+		file3 >> treshold;
+		if (treshold != "") {
 			//Give same r last names 
 			int r = rand() % 3 + 1;
 			for(int i = 0; i < r; i ++){
 				//int randIndex = rand() % this->GetSize() + 1;
-				this->mVec_Person[indx].last = tershold;
+				this->mVec_Person[indx].last = treshold;
 				this->mVec_Person[indx].uniqueID = indx;
 				indx++;
 				if (indx > this->GetSize() - 1) { return true; }
 			}
 		}
-		file3 >> tershold;
-		file3 >> tershold;
-		file3 >> tershold;
+		file3 >> treshold;
+		file3 >> treshold;
+		file3 >> treshold;
 	}
 	file.close();
 

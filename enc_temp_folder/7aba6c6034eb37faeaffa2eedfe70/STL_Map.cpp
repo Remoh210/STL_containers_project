@@ -223,9 +223,13 @@ bool STL_Map::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, st
 			curPerson.location = location;
 			this->mMap_Person.insert(std::pair<unsigned int, sPerson>(i, curPerson));
 
-		}	
+		}
+
+		
 		
 	}
+
+	
 
 	return true;
 }

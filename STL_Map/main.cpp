@@ -1,9 +1,9 @@
-#include "STL_Vector.h"
+#include "STL_Map.h"
 #include <iostream>
 using namespace std;
 int main()
 {
-	STL_Vector myVec;
+	STL_Map myMap;
 	sPoint Point;
 	Point.x = 0.0f;
 	Point.y = 0.0f;
@@ -63,25 +63,25 @@ int main()
 	jacobWithFirstOnly.health = 64.0f;
 	jacobWithFirstOnly.location = Point;
 
-	myVec.PushBack(michael);
-	myVec.PushBack(robin);
-	myVec.PushBack(fraser);
-	myVec.PushBack(jacob);
-	myVec.PushBack(fraserWithLastOnly);
-	myVec.PushBack(jacobWithFirstOnly);
+	myMap.PushBack(michael);
+	myMap.PushBack(robin);
+	myMap.PushBack(fraser);
+	myMap.PushBack(jacob);
+	myMap.PushBack(fraserWithLastOnly);
+	myMap.PushBack(jacobWithFirstOnly);
 	
 	sPerson findperson;
 
 
 
 	#ifdef _WIN32
-	if (!myVec.LoadDataFilesIntoContainer("../USCen/dist.female.first.txt",
+	if (!myMap.LoadDataFilesIntoContainer("../USCen/dist.female.first.txt",
 		"../USCen/dist.male.first.txt", "../USCen/US_LastNames.txt"))
 	{
 		std::cout << "error" << std::endl;
 	}
 	#elif __APPLE__	
-	if (!myVec.LoadDataFilesIntoContainer("USCen/dist.female.first.txt",
+	if (!myMap.LoadDataFilesIntoContainer("USCen/dist.female.first.txt",
 		"USCen/dist.male.first.txt", "USCen/US_LastNames.txt"))
 	{
 		std::cout << "error" << std::endl;
@@ -94,15 +94,15 @@ int main()
 
 	//myVec.GetAt(1, findperson);
 	//cout << findperson.first << std::endl;
-	cout << "size :" << myVec.GetSize() << std::endl;
+	cout << "size :" << myMap.GetSize() << std::endl;
 	//cout << "capacity :" << myVec.GetCapacity() << std::endl;
 	std::vector<sPerson> sortedVec;
-	myVec.SortPeople(sortedVec,  iPersonMotron::ASC_BY_HEALTH);
+	myMap.SortPeople(sortedVec,  iPersonMotron::ASC_BY_HEALTH);
 
 	for (unsigned int index = 0; index != 100 /*myVec.GetSize()*/; index++)
 	{
 		sPerson thePerson;
-		myVec.GetAt(index, thePerson);
+		myMap.GetAt(index, thePerson);
 
 		std::cout << index << " "
 			<< thePerson.first << " "
@@ -112,7 +112,7 @@ int main()
 
 	std::cout << "//////    FindPersonByID     //////" << std::endl;
 	sPerson findByIdPerson;
-	myVec.FindPersonByID(findByIdPerson, 2);
+	myMap.FindPersonByID(findByIdPerson, 2);
 	std::cout << "First: " << findByIdPerson.first << std::endl;
 	std::cout << "Last: " << findByIdPerson.last << std::endl;
 	std::cout << "Age: " << findByIdPerson.age << std::endl;
@@ -125,7 +125,7 @@ int main()
 	std::vector<sPerson> vec_findByRadius;
 	sPoint loc;
 	loc.x = 0.1f; loc.y = 1.1f; loc.z = 3.1f;
-	myVec.FindPeople(vec_findByRadius, loc, 30.0f, 2);
+	myMap.FindPeople(vec_findByRadius, loc, 30.0f, 2);
 	for (int i = 0; i < vec_findByRadius.size(); i++)
 	{
 		std::cout << "First: " << vec_findByRadius[i].first << std::endl;
@@ -140,7 +140,7 @@ int main()
     
     std::cout << "//////    FindPeopleByHealth     //////" << std::endl;
     std::vector<sPerson> vec_findByHealth;
-    myVec.FindPeople(vec_findByHealth, 40, 75, 10);
+	myMap.FindPeople(vec_findByHealth, 40, 75, 10);
     for (int i = 0; i < vec_findByHealth.size(); i++)
     {
         std::cout << "First: " << vec_findByHealth[i].first << std::endl;
@@ -158,7 +158,7 @@ int main()
 	loc.x = 10.0f;
 	loc.y = 1.0f;
 	loc.z = 15;
-	myVec.FindPeople(vec_findByHealthRad, loc, 199, 0.0f, 80.0f);
+	myMap.FindPeople(vec_findByHealthRad, loc, 199, 0.0f, 80.0f);
 	for (int i = 0; i < vec_findByHealthRad.size(); i++)
 	{
 		std::cout << "First: " << vec_findByHealthRad[i].first << std::endl;
@@ -174,7 +174,7 @@ int main()
 
 	std::cout << "//////    FindPeople by First     //////" << std::endl;
 	std::vector<sPerson> vec_findByNameFirst;
-	myVec.FindPeopleByName(vec_findByNameFirst, jacobWithFirstOnly);
+	myMap.FindPeopleByName(vec_findByNameFirst, jacobWithFirstOnly);
 	for (int i = 0; i < vec_findByNameFirst.size(); i++)
 	{
 		std::cout << "First: " << vec_findByNameFirst[i].first << std::endl;
@@ -190,7 +190,7 @@ int main()
 
 	std::cout << "//////    FindPeople by Last     //////" << std::endl;
 	std::vector<sPerson> vec_findByNameLast;
-	myVec.FindPeopleByName(vec_findByNameLast, michael);
+	myMap.FindPeopleByName(vec_findByNameLast, michael);
 	for (int i = 0; i < vec_findByNameLast.size(); i++)
 	{
 		std::cout << "First: " << vec_findByNameLast[i].first << std::endl;

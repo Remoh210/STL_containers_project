@@ -49,7 +49,7 @@ public:
 
 private:
 	std::map<unsigned int, sPerson> mMap_Person;
-    std::vector<sPerson> mVec_Person;
+    //std::vector<sPerson> mVec_Person;
 	//Generate n random data for all people
 	//Called inside LoadDataFilesIntoContainer();
 	void GenerateData(std::string first, int number = 10);
