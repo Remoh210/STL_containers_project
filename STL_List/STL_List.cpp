@@ -5,28 +5,39 @@
 #endif
 #include <fstream>
 #include "iPersonMotron.h"
-#include "STL_Vector.h"
 #include <algorithm>
 #include <iostream>
-
+#include "STL_List.h"
 #include <map>
 
 
-//   ________  _________  ___               ___      ___ _______   ________ _________  ________  ________     
-//  |\   ____\|\___   ___\\  \             |\  \    /  /|\  ___ \ |\   ____\\___   ___\\   __  \|\   __  \    
-//  \ \  \___|\|___ \  \_\ \  \            \ \  \  /  / | \   __/|\ \  \___\|___ \  \_\ \  \|\  \ \  \|\  \   
-//   \ \_____  \   \ \  \ \ \  \            \ \  \/  / / \ \  \_|/_\ \  \       \ \  \ \ \  \\\  \ \   _  _\  
-//    \|____|\  \   \ \  \ \ \  \____        \ \    / /   \ \  \_|\ \ \  \____   \ \  \ \ \  \\\  \ \  \\  \| 
-//      ____\_\  \   \ \__\ \ \_______\       \ \__/ /     \ \_______\ \_______\  \ \__\ \ \_______\ \__\\ _\ 
-//     |\_________\   \|__|  \|_______|        \|__|/       \|_______|\|_______|   \|__|  \|_______|\|__|\|__|
-//     \|_________|       
+//   ________  _________  ___               ___       ___  ________  _________   
+//  |\   ____\|\___   ___\\  \             |\  \     |\  \|\   ____\|\___   ___\ 
+//  \ \  \___|\|___ \  \_\ \  \            \ \  \    \ \  \ \  \___|\|___ \  \_| 
+//   \ \_____  \   \ \  \ \ \  \            \ \  \    \ \  \ \_____  \   \ \  \  
+//    \|____|\  \   \ \  \ \ \  \____        \ \  \____\ \  \|____|\  \   \ \  \ 
+//      ____\_\  \   \ \__\ \ \_______\       \ \_______\ \__\____\_\  \   \ \__\
+//     |\_________\   \|__|  \|_______|        \|_______|\|__|\_________\   \|__|
+//     \|_________|                                          \|_________|        
+
 
 float distance(sPoint point, sPoint point2)
 {
 	return std::sqrt(pow((point.x - point2.x), 2) + pow((point.y - point2.y), 2) + pow((point.z - point2.z), 2));
 }
 
-bool sortByFirstASC(sPerson& a, sPerson& b) { 
+
+//Random float generator
+float RandomFloat(float a, float b) {
+	float random = ((float)rand()) / (float)RAND_MAX;
+	float diff = b - a;
+	float r = random * diff;
+	return a + r;
+}
+
+
+
+bool sortByFirstASC(sPerson& a, sPerson& b) {
 	if (a.first == b.first) {
 		return a.last < b.last;
 	}
@@ -34,6 +45,7 @@ bool sortByFirstASC(sPerson& a, sPerson& b) {
 		return a.first < b.first;
 	}
 }
+
 
 bool sortByFirstDESC(sPerson& a, sPerson& b) {
 	if (a.first == b.first) {
@@ -79,33 +91,24 @@ bool sortByHpDESC(sPerson& a, sPerson& b) {
 	return a.health > b.health;
 }
 
-
-//Random float generator
-float RandomFloat(float a, float b) {
-	float random = ((float)rand()) / (float)RAND_MAX;
-	float diff = b - a;
-	float r = random * diff;
-	return a + r;
-}
-
-
-STL_Vector::STL_Vector()
+STL_List::STL_List()
 
 {
+	this->mList_Person.clear();
 }
 
-STL_Vector::~STL_Vector()
+STL_List::~STL_List()
 {
 
 }
 
 
-bool STL_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, std::string firstNameMaleFileName, std::string lastNameFileName)
+bool STL_List::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, std::string firstNameMaleFileName, std::string lastNameFileName)
 {
 	std::vector <std::string> vec_FemaleNames;
 	std::vector <std::string> vec_MaleNames;
 	std::vector <std::string> vec_Surnames;
-	mVec_Person.clear();
+	mList_Person.clear();
 	//Load female first names
 	std::ifstream file(firstNameFemaleFileName.c_str());
 	//Return false if no file
@@ -196,7 +199,7 @@ bool STL_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
 			location.y = y;
 			location.z = z;
 			curPerson.location = location;
-			this->mVec_Person.push_back(curPerson);
+			this->mList_Person.push_back(curPerson);
 		}
 		//Female
 		else
@@ -220,7 +223,7 @@ bool STL_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
 			location.y = y;
 			location.z = z;
 			curPerson.location = location;
-			this->mVec_Person.push_back(curPerson);
+			this->mList_Person.push_back(curPerson);
 
 		}
 
@@ -231,59 +234,64 @@ bool STL_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
 
 
 
-bool STL_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personToMatch, int maxNumberOfPeople)
+
+bool STL_List::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personToMatch, int maxNumberOfPeople)
 {
 	int count = 0;
 	//Search by first
 	if (personToMatch.first != "" && personToMatch.last == "")
 	{
-
-		for (int i = 0; i < this->mVec_Person.size(); i++)
+		std::list<sPerson>::iterator it = mList_Person.begin();
+		for (int i = 0; i < this->mList_Person.size(); i++)
 		{
-			if (this->mVec_Person[i].first == personToMatch.first)
+			if (it->first == personToMatch.first)
 			{
-				vecPeople.push_back(this->mVec_Person[i]);
+				vecPeople.push_back(*it);
 				count++;
 				if (count == maxNumberOfPeople)
 				{
 					return true;
 				}
 			}
+			it++;
 		}
 	}
 
 	//Search by last
 	if (personToMatch.last != "" && personToMatch.first == "")
 	{
-
-		for (int i = 0; i < this->mVec_Person.size(); i++)
+		std::list<sPerson>::iterator it = mList_Person.begin();
+		for (int i = 0; i < this->mList_Person.size(); i++)
 		{
-			if (this->mVec_Person[i].last == personToMatch.last)
+			if (it->last == personToMatch.last)
 			{
-				vecPeople.push_back(this->mVec_Person[i]);
+				vecPeople.push_back(*it);
 				count++;
 				if (count == maxNumberOfPeople)
 				{
 					return true;
 				}
 			}
+			it++;
 		}
 	}
 
 	//Search by first and last
 	if (personToMatch.last != "" && personToMatch.first != "")
 	{
-		for (int i = 0; i < this->mVec_Person.size(); i++)
+		std::list<sPerson>::iterator it = mList_Person.begin();
+		for (int i = 0; i < this->mList_Person.size(); i++)
 		{
-			if (this->mVec_Person[i].first == personToMatch.first && this->mVec_Person[i].last == personToMatch.last)
+			if (it->first == personToMatch.first && it->last == personToMatch.last)
 			{
-				vecPeople.push_back(this->mVec_Person[i]);
+				vecPeople.push_back(*it);
 				count++;
 				if (count == maxNumberOfPeople)
 				{
 					return true;
 				}
 			}
+			it++;
 		}
 	}
 
@@ -291,21 +299,21 @@ bool STL_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson perso
 	//Return all < maxNumberOfPeople
 	if (personToMatch.last == "" && personToMatch.first == "")
 	{
-
-		for (int i = 0; i < this->mVec_Person.size(); i++)
+		std::list<sPerson>::iterator it = mList_Person.begin();
+		for (int i = 0; i < this->mList_Person.size(); i++)
 		{
-			vecPeople.push_back(this->mVec_Person[i]);
+			vecPeople.push_back(*it);
 			count++;
 			if (count == maxNumberOfPeople)
 			{
 				return true;
 			}
-
+			it++;
 		}
 
 	}
 
-	
+
 	//If 0 people found
 	if (count == 0)
 	{
@@ -318,7 +326,7 @@ bool STL_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson perso
 	}
 }
 
-bool STL_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<sPerson>& vecPeopleToMatch, int maxNumberOfPeople)
+bool STL_List::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<sPerson>& vecPeopleToMatch, int maxNumberOfPeople)
 {
 	for (int i = 0; i < vecPeopleToMatch.size(); i++)
 	{
@@ -326,122 +334,61 @@ bool STL_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<s
 	}
 	if (vecPeople.size() == 0) { return false; }
 	else { return true; }
-	
+
 }
 
-bool STL_Vector::GetAt(unsigned int index, sPerson & thePerson)
+
+
+
+
+eContainerType STL_List::getContainerType(void)
 {
-	if (index < this->mVec_Person.size())
+	return STD_LIST;
+}
+
+unsigned int STL_List::GetSize(void)
+{
+	return this->mList_Person.size();
+}
+
+void STL_List::PushBack(sPerson person)
+{
+	this->mList_Person.push_back(person);
+}
+
+
+bool STL_List::FindPersonByID(sPerson &person, unsigned long long uniqueID)
+{
+	for (int i = 0; i < this->mList_Person.size(); i++)
 	{
-		thePerson = this->mVec_Person[index];
-		return true;
-	}
-
-	return false;
-}
-
-
-
-
-eContainerType STL_Vector::getContainerType(void)
-{
-    return STD_VECTOR;
-}
-
-unsigned int STL_Vector::GetSize(void)
-{
-	return this->mVec_Person.size();
-}
-
-void STL_Vector::PushBack(sPerson person)
-{
-	this->mVec_Person.push_back(person);
-}
-
-bool STL_Vector::FindPersonByID(sPerson &person, unsigned long long uniqueID)
-{
-	for (int i = 0; i < this->mVec_Person.size(); i++)
-	{
-		
-		if(this->mVec_Person[i].uniqueID == uniqueID)
+		std::list<sPerson>::iterator it = mList_Person.begin();
+		if (it->uniqueID == uniqueID)
 		{
-			person = this->mVec_Person[i];
+			person = *it;
 			return true;
 		}
+		it++;
 	}
 
 	return false;
 }
 
-bool STL_Vector::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, int maxPeopleToReturn)
+bool STL_List::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, int maxPeopleToReturn)
 {
 	int count = 0;
-	for (int i = 0; i < this->mVec_Person.size(); i++)
+	for (int i = 0; i < this->mList_Person.size(); i++)
 	{
-		if (distance(this->mVec_Person[i].location, location) <= radius)
+		std::list<sPerson>::iterator it = mList_Person.begin();
+		if (distance(it->location, location) <= radius)
 		{
-			vecPeople.push_back(this->mVec_Person[i]);
+			vecPeople.push_back(*it);
 			count++;
 			if (count == maxPeopleToReturn)
 			{
 				return true;
 			}
 		}
-	}
-    //If 0 people found
-    if(count == 0)
-    {
-	return false;
-    }
-    else
-    {
-        return true;
-    }
-}
-
-bool STL_Vector::FindPeople(std::vector<sPerson> &vecPeople, float minHealth, float maxHealth, int maxPeopleToReturn)
-{
-    int count = 0;
-    for (int i = 0; i < this->mVec_Person.size(); i++)
-    {
-        if (this->mVec_Person[i].health >= minHealth && this->mVec_Person[i].health <= maxHealth)
-        {
-            vecPeople.push_back(this->mVec_Person[i]);
-            count++;
-            if (count == maxPeopleToReturn)
-            {
-                return true;
-            }
-        }
-    }
-    //If 0 people found
-    if(count == 0)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-}
-
-bool STL_Vector::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, float minHealth, float maxHealth, int maxPeopleToReturn)
-{
-	int count = 0;
-	for (int i = 0; i < this->mVec_Person.size(); i++)
-	{
-		if (this->mVec_Person[i].health >= minHealth && this->mVec_Person[i].health <= maxHealth)
-		{
-			if (distance(this->mVec_Person[i].location, location) <= radius)
-			{
-				vecPeople.push_back(this->mVec_Person[i]);
-				count++;
-				if (count == maxPeopleToReturn)
-				{
-					return true;
-				}
-			}
-		}
+		it++;
 	}
 	//If 0 people found
 	if (count == 0)
@@ -454,50 +401,132 @@ bool STL_Vector::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, fl
 	}
 }
 
-bool STL_Vector::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
+bool STL_List::FindPeople(std::vector<sPerson> &vecPeople, float minHealth, float maxHealth, int maxPeopleToReturn)
+{
+	int count = 0;
+	std::list<sPerson>::iterator it = mList_Person.begin();
+	for (int i = 0; i < this->mList_Person.size(); i++)
+	{
+		if (it->health >= minHealth && it->health <= maxHealth)
+		{
+			vecPeople.push_back(*it);
+			count++;
+			if (count == maxPeopleToReturn)
+			{
+				return true;
+			}
+		}
+		it++;
+	}
+	//If 0 people found
+	if (count == 0)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+bool STL_List::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, float minHealth, float maxHealth, int maxPeopleToReturn)
+{
+	int count = 0;
+	std::list<sPerson>::iterator it = mList_Person.begin();
+	for (int i = 0; i < this->mList_Person.size(); i++)
+	{
+		if (it->health >= minHealth && it->health <= maxHealth)
+		{
+			if (distance(it->location, location) <= radius)
+			{
+				vecPeople.push_back(*it);
+				count++;
+				if (count == maxPeopleToReturn)
+				{
+					return true;
+				}
+			}
+		}
+		it++;
+	}
+	//If 0 people found
+	if (count == 0)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+bool STL_List::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
 {
 	switch (sortType)
 	{
 	case iPersonMotron::ASC_FIRST_THEN_LAST:
-		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByFirstASC);
-		//std::sort(mVec_Person.begin(), mVec_Person.end(), sortByLastASC);
-		
+	{
+		mList_Person.sort(sortByFirstASC);
+
 		break;
+	}
+
 	case iPersonMotron::DESC_FIRST_THEN_LAST:
-		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByFirstDESC);
+	{
 		
+		mList_Person.sort(sortByFirstDESC);
 		break;
+	}
+
 	case iPersonMotron::ASC_LAST_THEN_FIRST:
-		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByLastASC);
-		
+	{
+		mList_Person.sort(sortByLastASC);
 		break;
+	}
 	case iPersonMotron::DESC_LAST_THEN_FIRST:
-		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByLastDESC);
-		
+	{
+
+		mList_Person.sort(sortByLastDESC);
 		break;
+	}
+
 	case iPersonMotron::ASC_BY_ID:
-		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByIdASC);
-		
+	{
+		mList_Person.sort(sortByIdASC);
 		break;
+	}
+
 	case iPersonMotron::DESC_BY_ID:
-		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByIdDESC);
-		
+	{
+		mList_Person.sort(sortByIdDESC);
 		break;
+	}
+
 	case iPersonMotron::ASC_BY_HEALTH:
-		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByHpASC);
-		
+	{
+		mList_Person.sort(sortByHpASC);
 		break;
+	}
+
 	case iPersonMotron::DESC_BY_HEALTH:
-		std::sort(mVec_Person.begin(), mVec_Person.end(), sortByHpDESC);
-		
+	{
+		mList_Person.sort(sortByHpDESC);
 		break;
+	}
+
 	default:
 		return false;
 		break;
 	}
 
 
+	std::list<sPerson>::iterator it;
+	for (it = mList_Person.begin(); it != mList_Person.end(); it++)
+	{
+		vecPeople.push_back(*it);
+	}
 
-	vecPeople = mVec_Person;
+
 	return true;
 }
+
