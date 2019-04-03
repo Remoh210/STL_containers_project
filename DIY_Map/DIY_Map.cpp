@@ -5,27 +5,24 @@
 #endif
 #include <fstream>
 #include "iPersonMotron.h"
-#include <algorithm>
-#include <iostream>
-#include "STL_List.h"
-#include <map>
+#include "DIY_Map.h"
 
 
-//   ________  _________  ___               ___       ___  ________  _________   
-//  |\   ____\|\___   ___\\  \             |\  \     |\  \|\   ____\|\___   ___\ 
-//  \ \  \___|\|___ \  \_\ \  \            \ \  \    \ \  \ \  \___|\|___ \  \_| 
-//   \ \_____  \   \ \  \ \ \  \            \ \  \    \ \  \ \_____  \   \ \  \  
-//    \|____|\  \   \ \  \ \ \  \____        \ \  \____\ \  \|____|\  \   \ \  \ 
-//      ____\_\  \   \ \__\ \ \_______\       \ \_______\ \__\____\_\  \   \ \__\
-//     |\_________\   \|__|  \|_______|        \|_______|\|__|\_________\   \|__|
-//     \|_________|                                          \|_________|        
+
+//   ________  ___      ___    ___      _____ ______   ________  ________   
+//  |\   ___ \|\  \    |\  \  /  /|    |\   _ \  _   \|\   __  \|\   __  \  
+//  \ \  \_|\ \ \  \   \ \  \/  / /    \ \  \\\__\ \  \ \  \|\  \ \  \|\  \ 
+//   \ \  \ \\ \ \  \   \ \    / /      \ \  \\|__| \  \ \   __  \ \   ____\
+//    \ \  \_\\ \ \  \   \/  /  /        \ \  \    \ \  \ \  \ \  \ \  \___|
+//     \ \_______\ \__\__/  / /           \ \__\    \ \__\ \__\ \__\ \__\   
+//      \|_______|\|__|\___/ /             \|__|     \|__|\|__|\|__|\|__|   
+//                    \|___|/        
 
 
 float distance(sPoint point, sPoint point2)
 {
 	return std::sqrt(pow((point.x - point2.x), 2) + pow((point.y - point2.y), 2) + pow((point.z - point2.z), 2));
 }
-
 
 //Random float generator
 float RandomFloat(float a, float b) {
@@ -34,81 +31,35 @@ float RandomFloat(float a, float b) {
 	float r = random * diff;
 	return a + r;
 }
-
-
-
-bool sortByFirstASC(sPerson& a, sPerson& b) {
-	if (a.first == b.first) {
-		return a.last < b.last;
-	}
-	else {
-		return a.first < b.first;
-	}
-}
-
-
-bool sortByFirstDESC(sPerson& a, sPerson& b) {
-	if (a.first == b.first) {
-		return a.last > b.last;
-	}
-	else {
-		return a.first > b.first;
-	}
-}
-
-bool sortByLastASC(sPerson& a, sPerson& b) {
-	if (a.last == b.last) {
-		return a.first < b.first;
-	}
-	else {
-		return a.last < b.last;
-	}
-}
-
-bool sortByLastDESC(sPerson& a, sPerson& b) {
-	if (a.last == b.last) {
-		return a.first > b.first;
-	}
-	else {
-		return a.last > b.last;
-	}
-}
-
-
-bool sortByIdASC(sPerson& a, sPerson& b) {
-	return a.uniqueID < b.uniqueID;
-}
-
-bool sortByIdDESC(sPerson& a, sPerson& b) {
-	return a.uniqueID > b.uniqueID;
-}
-
-bool sortByHpASC(sPerson& a, sPerson& b) {
-	return a.health < b.health;
-}
-
-bool sortByHpDESC(sPerson& a, sPerson& b) {
-	return a.health > b.health;
-}
-
-STL_List::STL_List()
-
+DIY_Map::DIY_Map(unsigned int size)
 {
-	this->mList_Person.clear();
+	m_CurSize = size;
+	this->m_table = new sHashEntry*[this->m_CurSize];
+
+	for (int index = 0; index != this->m_CurSize; index++)
+	{
+		this->m_table[index] = NULL;
+	}
+	return;
 }
 
-STL_List::~STL_List()
+DIY_Map::~DIY_Map()
 {
+	for (int i = 0; i < m_CurSize; i++)
 
+		if (m_table[i] != NULL)
+
+			delete m_table[i];
+
+	delete[] m_table;
 }
 
-
-bool STL_List::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, std::string firstNameMaleFileName, std::string lastNameFileName)
+bool DIY_Map::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, std::string firstNameMaleFileName, std::string lastNameFileName)
 {
 	std::vector <std::string> vec_FemaleNames;
 	std::vector <std::string> vec_MaleNames;
 	std::vector <std::string> vec_Surnames;
-	mList_Person.clear();
+	this->clear();
 	//Load female first names
 	std::ifstream file(firstNameFemaleFileName.c_str());
 	//Return false if no file
@@ -200,7 +151,7 @@ bool STL_List::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, s
 			location.z = z;
 			curPerson.location = location;
 			curPerson.uniqueID = i;
-			this->mList_Person.push_back(curPerson);
+			this->InsertAt(i, curPerson);
 		}
 		//Female
 		else
@@ -225,7 +176,7 @@ bool STL_List::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, s
 			location.z = z;
 			curPerson.location = location;
 			curPerson.uniqueID = i;
-			this->mList_Person.push_back(curPerson);
+			this->InsertAt(i, curPerson);
 
 		}
 
@@ -234,66 +185,66 @@ bool STL_List::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, s
 	return true;
 }
 
-
-
-
-bool STL_List::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personToMatch, int maxNumberOfPeople)
+bool DIY_Map::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personToMatch, int maxNumberOfPeople)
 {
 	int count = 0;
 	//Search by first
 	if (personToMatch.first != "" && personToMatch.last == "")
 	{
-		std::list<sPerson>::iterator it = mList_Person.begin();
-		for (int i = 0; i < this->mList_Person.size(); i++)
+
+		for (int i = 0; i < this->GetSize(); i++)
 		{
-			if (it->first == personToMatch.first)
+			sPerson curPerson; 
+			this->GetAt(i, curPerson);
+
+			if (curPerson.first == personToMatch.first)
 			{
-				vecPeople.push_back(*it);
+				vecPeople.push_back(curPerson);
 				count++;
 				if (count == maxNumberOfPeople)
 				{
 					return true;
 				}
 			}
-			it++;
 		}
 	}
 
 	//Search by last
 	if (personToMatch.last != "" && personToMatch.first == "")
 	{
-		std::list<sPerson>::iterator it = mList_Person.begin();
-		for (int i = 0; i < this->mList_Person.size(); i++)
+
+		for (int i = 0; i < this->GetSize(); i++)
 		{
-			if (it->last == personToMatch.last)
+			sPerson curPerson;
+			this->GetAt(i, curPerson);
+			if (curPerson.last == personToMatch.last)
 			{
-				vecPeople.push_back(*it);
+				vecPeople.push_back(curPerson);
 				count++;
 				if (count == maxNumberOfPeople)
 				{
 					return true;
 				}
 			}
-			it++;
 		}
 	}
 
 	//Search by first and last
 	if (personToMatch.last != "" && personToMatch.first != "")
 	{
-		std::list<sPerson>::iterator it = mList_Person.begin();
-		for (int i = 0; i < this->mList_Person.size(); i++)
+		for (int i = 0; i < this->GetSize(); i++)
 		{
-			if (it->first == personToMatch.first && it->last == personToMatch.last)
+			sPerson curPerson;
+			this->GetAt(i, curPerson);
+			if (curPerson.first == personToMatch.first && curPerson.last == personToMatch.last)
 			{
-				vecPeople.push_back(*it);
+				vecPeople.push_back(curPerson);
 				count++;
 				if (count == maxNumberOfPeople)
 				{
 					return true;
 				}
 			}
-			it++;
 		}
 	}
 
@@ -301,16 +252,18 @@ bool STL_List::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personT
 	//Return all < maxNumberOfPeople
 	if (personToMatch.last == "" && personToMatch.first == "")
 	{
-		std::list<sPerson>::iterator it = mList_Person.begin();
-		for (int i = 0; i < this->mList_Person.size(); i++)
+
+		for (int i = 0; i < this->GetSize(); i++)
 		{
-			vecPeople.push_back(*it);
+			sPerson curPerson;
+			this->GetAt(i, curPerson);
+			vecPeople.push_back(curPerson);
 			count++;
 			if (count == maxNumberOfPeople)
 			{
 				return true;
 			}
-			it++;
+
 		}
 
 	}
@@ -328,7 +281,7 @@ bool STL_List::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personT
 	}
 }
 
-bool STL_List::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<sPerson>& vecPeopleToMatch, int maxNumberOfPeople)
+bool DIY_Map::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<sPerson>& vecPeopleToMatch, int maxNumberOfPeople)
 {
 	for (int i = 0; i < vecPeopleToMatch.size(); i++)
 	{
@@ -336,61 +289,79 @@ bool STL_List::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<sPe
 	}
 	if (vecPeople.size() == 0) { return false; }
 	else { return true; }
-
 }
 
-
-
-
-
-eContainerType STL_List::getContainerType(void)
+eContainerType DIY_Map::getContainerType(void)
 {
-	return STD_LIST;
+	return CUSTOM_DIY_MAP;
 }
 
-unsigned int STL_List::GetSize(void)
+unsigned int DIY_Map::GetSize(void)
 {
-	return this->mList_Person.size();
+	return this->m_CurSize;
 }
 
-void STL_List::PushBack(sPerson person)
+void DIY_Map::clear()
 {
-	this->mList_Person.push_back(person);
-}
-
-
-bool STL_List::FindPersonByID(sPerson &person, unsigned long long uniqueID)
-{
-	for (int i = 0; i < this->mList_Person.size(); i++)
+	for (int index = 0; index != this->m_CurSize; index++)
 	{
-		std::list<sPerson>::iterator it = mList_Person.begin();
-		if (it->uniqueID == uniqueID)
+		this->m_table[index] = NULL;
+	}
+	return;
+}
+
+bool DIY_Map::GetAt(unsigned int index, sPerson & thePerson)
+{
+	int hash = (index % m_CurSize);
+
+	while (m_table[hash] != NULL && m_table[hash]->key != index)
+
+		hash = (hash + 1) % m_CurSize;
+
+	if (m_table[hash] == NULL)
+	{
+		return false;
+	}
+		
+	else
+	{
+		thePerson = m_table[hash]->value;
+	}
+		
+}
+
+bool DIY_Map::FindPersonByID(sPerson & person, unsigned long long uniqueID)
+{
+	for (int i = 0; i < this->GetSize(); i++)
+	{
+		sPerson CurPerson;
+		this->GetAt(i, CurPerson);
+		if (CurPerson.uniqueID == uniqueID)
 		{
-			person = *it;
+			person = CurPerson;
 			return true;
 		}
-		it++;
 	}
 
 	return false;
 }
 
-bool STL_List::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, int maxPeopleToReturn)
+bool DIY_Map::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, int maxPeopleToReturn)
 {
 	int count = 0;
-	for (int i = 0; i < this->mList_Person.size(); i++)
+	for (int i = 0; i < this->GetSize(); i++)
 	{
-		std::list<sPerson>::iterator it = mList_Person.begin();
-		if (distance(it->location, location) <= radius)
+		sPerson CurPerson;
+		this->GetAt(i, CurPerson);
+		if (distance(CurPerson.location, location) <= radius)
 		{
-			vecPeople.push_back(*it);
+			vecPeople.push_back(CurPerson);
 			count++;
 			if (count == maxPeopleToReturn)
 			{
 				return true;
 			}
 		}
-		it++;
 	}
 	//If 0 people found
 	if (count == 0)
@@ -403,22 +374,22 @@ bool STL_List::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, floa
 	}
 }
 
-bool STL_List::FindPeople(std::vector<sPerson> &vecPeople, float minHealth, float maxHealth, int maxPeopleToReturn)
+bool DIY_Map::FindPeople(std::vector<sPerson>& vecPeople, float minHealth, float maxHealth, int maxPeopleToReturn)
 {
 	int count = 0;
-	std::list<sPerson>::iterator it = mList_Person.begin();
-	for (int i = 0; i < this->mList_Person.size(); i++)
+	for (int i = 0; i < this->GetSize(); i++)
 	{
-		if (it->health >= minHealth && it->health <= maxHealth)
+		sPerson CurPerson;
+		this->GetAt(i, CurPerson);
+		if (CurPerson.health >= minHealth && CurPerson.health <= maxHealth)
 		{
-			vecPeople.push_back(*it);
+			vecPeople.push_back(CurPerson);
 			count++;
 			if (count == maxPeopleToReturn)
 			{
 				return true;
 			}
 		}
-		it++;
 	}
 	//If 0 people found
 	if (count == 0)
@@ -431,17 +402,18 @@ bool STL_List::FindPeople(std::vector<sPerson> &vecPeople, float minHealth, floa
 	}
 }
 
-bool STL_List::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, float minHealth, float maxHealth, int maxPeopleToReturn)
+bool DIY_Map::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, float minHealth, float maxHealth, int maxPeopleToReturn)
 {
 	int count = 0;
-	std::list<sPerson>::iterator it = mList_Person.begin();
-	for (int i = 0; i < this->mList_Person.size(); i++)
+	for (int i = 0; i < this->GetSize(); i++)
 	{
-		if (it->health >= minHealth && it->health <= maxHealth)
+		sPerson CurPerson;
+		this->GetAt(i, CurPerson);
+		if (CurPerson.health >= minHealth && CurPerson.health <= maxHealth)
 		{
-			if (distance(it->location, location) <= radius)
+			if (distance(CurPerson.location, location) <= radius)
 			{
-				vecPeople.push_back(*it);
+				vecPeople.push_back(CurPerson);
 				count++;
 				if (count == maxPeopleToReturn)
 				{
@@ -449,7 +421,6 @@ bool STL_List::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, floa
 				}
 			}
 		}
-		it++;
 	}
 	//If 0 people found
 	if (count == 0)
@@ -462,73 +433,73 @@ bool STL_List::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, floa
 	}
 }
 
-bool STL_List::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
+bool DIY_Map::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
 {
 	switch (sortType)
 	{
 	case iPersonMotron::ASC_FIRST_THEN_LAST:
 	{
-		mList_Person.sort(sortByFirstASC);
 
 		break;
 	}
-
+		
 	case iPersonMotron::DESC_FIRST_THEN_LAST:
 	{
-		
-		mList_Person.sort(sortByFirstDESC);
+
 		break;
 	}
-
 	case iPersonMotron::ASC_LAST_THEN_FIRST:
 	{
-		mList_Person.sort(sortByLastASC);
+
 		break;
 	}
 	case iPersonMotron::DESC_LAST_THEN_FIRST:
 	{
 
-		mList_Person.sort(sortByLastDESC);
 		break;
 	}
-
 	case iPersonMotron::ASC_BY_ID:
 	{
-		mList_Person.sort(sortByIdASC);
+
 		break;
 	}
-
 	case iPersonMotron::DESC_BY_ID:
 	{
-		mList_Person.sort(sortByIdDESC);
+
 		break;
 	}
-
 	case iPersonMotron::ASC_BY_HEALTH:
 	{
-		mList_Person.sort(sortByHpASC);
+
 		break;
 	}
-
 	case iPersonMotron::DESC_BY_HEALTH:
 	{
-		mList_Person.sort(sortByHpDESC);
+
 		break;
 	}
-
 	default:
-		return false;
 		break;
 	}
 
 
-	std::list<sPerson>::iterator it;
-	for (it = mList_Person.begin(); it != mList_Person.end(); it++)
-	{
-		vecPeople.push_back(*it);
-	}
-
-
-	return true;
+	//TODO push
 }
 
+void DIY_Map::InsertAt(unsigned int index, sPerson person)
+{
+	int hash = (index % m_CurSize);
+
+	while (m_table[hash] != NULL && m_table[hash]->key != index)
+	{
+		hash = (hash + 1) % m_CurSize;
+	}
+
+	//delete if exist
+	if (m_table[hash] != NULL)
+	{
+		delete m_table[hash];
+	}
+
+	m_table[hash] = new sHashEntry(index, person);
+}

@@ -196,6 +196,7 @@ bool STL_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
 			location.y = y;
 			location.z = z;
 			curPerson.location = location;
+			curPerson.uniqueID = i;
 			this->mVec_Person.push_back(curPerson);
 		}
 		//Female
@@ -220,6 +221,7 @@ bool STL_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
 			location.y = y;
 			location.z = z;
 			curPerson.location = location;
+			curPerson.uniqueID = i;
 			this->mVec_Person.push_back(curPerson);
 
 		}

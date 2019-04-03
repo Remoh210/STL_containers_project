@@ -7,11 +7,11 @@
 #include "iPersonMotron.h"
 
 
-class  DIY_Vector : public iPersonMotron
+class  DIY_Map : public iPersonMotron
 {
 public:
-	DIY_Vector();
-	 ~DIY_Vector();
+	DIY_Map(unsigned int size = 5000);
+	~DIY_Map();
 
 	//Will also generate random data for each peeson
 	bool LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
@@ -28,9 +28,9 @@ public:
 	//Radius
 	bool FindPeople(std::vector<sPerson> &vecPeople, sPoint location, float radius,
 		int maxPeopleToReturn = INT_MAX);
-    //Health
-    bool FindPeople( std::vector<sPerson> &vecPeople, float minHealth, float maxHealth,
-                    int maxPeopleToReturn = INT_MAX );
+	//Health
+	bool FindPeople(std::vector<sPerson> &vecPeople, float minHealth, float maxHealth,
+		int maxPeopleToReturn = INT_MAX);
 	//Health and Radius
 	bool FindPeople(std::vector<sPerson> &vecPeople,
 		sPoint location, float radius, float minHealth, float maxHealth,
@@ -43,20 +43,27 @@ public:
 	bool GetPerformanceFromLastCall(sPerfData &callStats) { return false; }
 	eContainerType getContainerType(void);
 
-	void SetCapacity(unsigned int newCapacity);
-	unsigned int GetSize(void);		
-	unsigned int GetCapacity(void);	
+	unsigned int GetSize(void);
 	void clear();
 
-	void PushBack(sPerson person);
 	void InsertAt(unsigned int index, sPerson person);
 
 private:
 
-	sPerson* m_Data;			
-	unsigned int m_CurSize;		
-	unsigned int m_next;
-	void Qsort(int left, int right, eSortType type);
+	struct sHashEntry {
+		sHashEntry(unsigned int key, sPerson value)
+		{
+			this->key = key;
+			this->value = value;
+		}
+		unsigned int key;
+		sPerson value;
+	};
+
+	sHashEntry **m_table;
+	unsigned int m_CurSize;
+
+
 };
 
 #endif

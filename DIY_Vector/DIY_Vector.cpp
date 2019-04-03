@@ -52,6 +52,9 @@ DIY_Vector::~DIY_Vector()
 
 bool DIY_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, std::string firstNameMaleFileName, std::string lastNameFileName)
 {
+	std::vector <std::string> vec_FemaleNames;
+	std::vector <std::string> vec_MaleNames;
+	std::vector <std::string> vec_Surnames;
 	this->clear();
 	//Load female first names
 	std::ifstream file(firstNameFemaleFileName.c_str());
@@ -63,14 +66,13 @@ bool DIY_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
 	std::string treshold;
 	while (!file.eof())
 	{
-		int GenerateNumber = rand() % 1 + 10;
 		treshold = "";
-		file >> treshold;  
+		file >> treshold;
 		if (treshold != "") {
-			GenerateData(treshold);
+			vec_FemaleNames.push_back(treshold);
 		}
-		file >> treshold;  
-		file >> treshold;  
+		file >> treshold;
+		file >> treshold;
 		file >> treshold;
 	}
 	file.close();
@@ -87,47 +89,94 @@ bool DIY_Vector::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName,
 		treshold = "";
 		file2 >> treshold;
 		if (treshold != "") {
-			GenerateData(treshold);
+			vec_MaleNames.push_back(treshold);
 		}
 		file2 >> treshold;
 		file2 >> treshold;
 		file2 >> treshold;
 	}
-	file.close();
+	file2.close();
 
-
-	//Load last names
+	//Load surnames
 	std::ifstream file3(lastNameFileName.c_str());
-	//Return false if no file
 	if (!file3.is_open())
 	{
 		return false;
 	}
-
-	int indx = 0;
 	while (!file3.eof())
 	{
 		treshold = "";
 		file3 >> treshold;
 		if (treshold != "") {
-			//Give same r last names 
-			int r = rand() % 3 + 1;
-			for(int i = 0; i < r; i ++){
-				//int randIndex = rand() % this->GetSize() + 1;
-				this->m_Data[indx].last = treshold;
-				this->m_Data[indx].uniqueID = indx;
-				indx++;
-				if (indx > this->GetSize()) { return true; }
-			}
+			vec_Surnames.push_back(treshold);
 		}
 		file3 >> treshold;
 		file3 >> treshold;
 		file3 >> treshold;
 	}
-	file.close();
+	file3.close();
 
 
-	
+	int numPeopleToGen = 1000;
+	for (int i = 0; i < numPeopleToGen; i++)
+	{
+
+		int MaleFemale = rand() % 10 + 1;
+
+
+		//Male
+		if (MaleFemale < 5)
+		{
+			int NameRandIndex = rand() % vec_MaleNames.size();
+			int SurnameRandIndex = rand() % vec_Surnames.size();
+			sPerson curPerson;
+			curPerson.first = vec_MaleNames[NameRandIndex];
+			curPerson.last = vec_Surnames[SurnameRandIndex];
+			//Generate age
+			int age = rand() % 100 + 1;
+			curPerson.age = age;
+			//Generate health
+			float health = RandomFloat(10.0f, 100.0f);
+			curPerson.health = health;
+			float x = RandomFloat(-5000.0f, 5000.0f);
+			float y = RandomFloat(-100.0f, 100.0f);
+			float z = RandomFloat(-5000.0f, 5000.0f);
+			sPoint location;
+			location.x = x;
+			location.y = y;
+			location.z = z;
+			curPerson.location = location;
+			curPerson.uniqueID = i;
+			this->PushBack(curPerson);
+		}
+		//Female
+		else
+		{
+			int NameRandIndex = rand() % vec_FemaleNames.size();
+			int SurnameRandIndex = rand() % vec_Surnames.size();
+			sPerson curPerson;
+			curPerson.first = vec_FemaleNames[NameRandIndex];
+			curPerson.last = vec_Surnames[SurnameRandIndex];
+			//Generate age
+			int age = rand() % 100 + 1;
+			curPerson.age = age;
+			//Generate health
+			float health = RandomFloat(10.0f, 100.0f);
+			curPerson.health = health;
+			float x = RandomFloat(-5000.0f, 5000.0f);
+			float y = RandomFloat(-100.0f, 100.0f);
+			float z = RandomFloat(-5000.0f, 5000.0f);
+			sPoint location;
+			location.x = x;
+			location.y = y;
+			location.z = z;
+			curPerson.location = location;
+			curPerson.uniqueID = i;
+			this->PushBack(curPerson);
+
+		}
+
+	}
 
 	return true;
 }
@@ -155,33 +204,6 @@ void DIY_Vector::PushBack(sPerson person)
 
 	return;
 
-}
-
-
-void DIY_Vector::GenerateData(std::string first, int number)
-{
-	int GenerateNumber = rand() % number + 1;
-	for(int i = 0; i < GenerateNumber; i++)
-	{
-		sPerson curPerson;
-		curPerson.first = first;
-		//Generate age
-		int age = rand() % 100 + 1;
-		curPerson.age = age;
-		//Generate health
-		float health = RandomFloat(10.0f, 100.0f);
-		curPerson.health = health;
-		float x = RandomFloat(-5000.0f, 5000.0f);
-		float y = RandomFloat(-100.0f, 100.0f);
-		float z = RandomFloat(-5000.0f, 5000.0f);
-		sPoint location;
-		location.x = x;
-		location.y = y;
-		location.z = z;
-		curPerson.location = location;
-		this->PushBack(curPerson);
-	}
-	
 }
 
 

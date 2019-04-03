@@ -24,6 +24,7 @@ private:
 
 	unsigned int m_calcHash(std::string index);
 
+
 	// Here's where our data is
 	// NOTE: This is an array of pointers, but since it's dynamic, 
 	//       it's *also* a pointer.

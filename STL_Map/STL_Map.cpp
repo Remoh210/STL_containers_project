@@ -9,8 +9,6 @@
 #include <algorithm>
 #include <iostream>
 
-#include <map>
-
 
 //   ________  _________  ___               _____ ______   ________  ________   
 //  |\   ____\|\___   ___\\  \             |\   _ \  _   \|\   __  \|\   __  \  
@@ -148,6 +146,7 @@ bool STL_Map::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, st
 			location.y = y;
 			location.z = z;
 			curPerson.location = location;
+			curPerson.uniqueID = i;
 			this->mMap_Person.insert(std::pair<unsigned int, sPerson>(i, curPerson));
 		}
 		//Female
@@ -172,6 +171,7 @@ bool STL_Map::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, st
 			location.y = y;
 			location.z = z;
 			curPerson.location = location;
+			curPerson.uniqueID = i;
 			this->mMap_Person.insert(std::pair<unsigned int, sPerson>(i, curPerson));
 
 		}	
