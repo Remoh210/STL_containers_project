@@ -89,15 +89,16 @@ int main()
 
 
 
+	cout << "//////    DESC_BY_HEALTH     //////" << std::endl;
 	cout << "size :" << myList.GetSize() << std::endl;
 	std::vector<sPerson> sortedVec;
-	myList.SortPeople(sortedVec, iPersonMotron::ASC_BY_HEALTH);
+	myList.SortPeople(sortedVec, iPersonMotron::DESC_BY_HEALTH);
 
 	for (unsigned int index = 0; index != 100 /*myList.GetSize()*/; index++)
 	{
 
 
-		std::cout << index << " "
+			::cout << sortedVec[index].uniqueID << " "
 			<< sortedVec[index].first << " "
 			<< sortedVec[index].health << " "
 			<< sortedVec[index].last << std::endl;

@@ -184,7 +184,7 @@ bool DIY_List::FindPeopleByName(std::vector<sPerson> &vecPeople, std::vector<sPe
 	for (int i = 0; i < vecPeopleToMatch.size(); i++)
 	{
 		int cur = vecPeople.size();
-		FindPeopleByName(vecPeople, vecPeopleToMatch, maxNumberOfPeople - added);
+		FindPeopleByName(vecPeople, vecPeopleToMatch[i], maxNumberOfPeople - added);
 		added += (vecPeople.size() - cur);
 		if (added >= maxNumberOfPeople)
 		{
@@ -337,42 +337,7 @@ public:
 
 
 
-class FirstThenLastASC_omparer : public NodeComparer
-{
-public:
-	bool operator()(sPerson *a, sPerson *b)
-	{
-		if (b->first > a->first)
-		{
-			return true;
-		}
-		else if (b->first == a->first)
-		{
-			return a->last <= b->last;
-		}
-		return false;
-	};
-};
-
-class LastThenFirstASC_omparer : public NodeComparer
-{
-public:
-	bool operator()(sPerson *a, sPerson *b)
-	{
-		if (b->last > a->last)
-		{
-			return true;
-		}
-		else if (b->last == a->last)
-		{
-			return a->first <= b->first;
-		}
-		return false;
-	};
-};
-
-
-class FirstThenLastDESC_omparer : public NodeComparer
+class FirstThenLastASC_comparer : public NodeComparer
 {
 public:
 	bool operator()(sPerson *a, sPerson *b)
@@ -389,7 +354,26 @@ public:
 	};
 };
 
-class LastThenFirstDESC_omparer : public NodeComparer
+
+
+class FirstThenLastDESC_comparer : public NodeComparer
+{
+public:
+	bool operator()(sPerson *a, sPerson *b)
+	{
+		if (b->first > a->first)
+		{
+			return true;
+		}
+		else if (b->first == a->first)
+		{
+			return a->last <= b->last;
+		}
+		return false;
+	};
+};
+
+class LastThenFirstASC_comparer : public NodeComparer
 {
 public:
 	bool operator()(sPerson *a, sPerson *b)
@@ -401,6 +385,26 @@ public:
 		else if (b->last == a->last)
 		{
 			return a->first >= b->first;
+		}
+		return false;
+	};
+};
+
+
+
+
+class LastThenFirstDESC_comparer : public NodeComparer
+{
+public:
+	bool operator()(sPerson *a, sPerson *b)
+	{
+		if (b->last > a->last)
+		{
+			return true;
+		}
+		else if (b->last == a->last)
+		{
+			return a->first <= b->first;
 		}
 		return false;
 	};
@@ -511,7 +515,7 @@ bool DIY_List::GetPerformanceFromLastCall(sPerfData & callStats)
 	return true;
 }
 
-void DIY_List::_qsort(Node *left, Node *right, NodeComparer &cmp, Node **newHead, Node **newTail)
+void DIY_List::Qsort(Node *left, Node *right, NodeComparer &cmp, Node **newHead, Node **newTail)
 {
 	if (left == right || left == NULL || right == NULL)
 		return;
@@ -559,9 +563,9 @@ void DIY_List::_qsort(Node *left, Node *right, NodeComparer &cmp, Node **newHead
 	if (swapsOccured)
 	{
 		// std::cout << "LEFT RECUR\n";
-		_qsort(newLeft, pivot->previousNode, cmp, NULL, NULL);
+		Qsort(newLeft, pivot->previousNode, cmp, NULL, NULL);
 		// std::cout << "RIGHT RECUR\n";
-		_qsort(pivot, tail, cmp, NULL, NULL);
+		Qsort(pivot, tail, cmp, NULL, NULL);
 	}
 
 	if (newHead != NULL)
@@ -590,24 +594,24 @@ bool DIY_List::SortPeople(std::vector<sPerson> &vecPeople, eSortType sortType)
 	{
 	case iPersonMotron::ASC_FIRST_THEN_LAST:
 	{
-		cmp = new FirstThenLastASC_omparer();
+		cmp = new FirstThenLastASC_comparer();
 		break;
 	}
 	case iPersonMotron::DESC_FIRST_THEN_LAST:
 	{
-		cmp = new FirstThenLastDESC_omparer();
+		cmp = new FirstThenLastDESC_comparer();
 		break;
 	}
 		
 	case iPersonMotron::ASC_LAST_THEN_FIRST:
 	{
-		cmp = new LastThenFirstASC_omparer();
+		cmp = new LastThenFirstASC_comparer();
 		break;
 	}
 
 	case iPersonMotron::DESC_LAST_THEN_FIRST:
 	{
-		cmp = new LastThenFirstDESC_omparer();
+		cmp = new LastThenFirstDESC_comparer();
 		break;
 	}
 		
@@ -639,7 +643,7 @@ bool DIY_List::SortPeople(std::vector<sPerson> &vecPeople, eSortType sortType)
 
 	Node *newFirst;
 	Node *newLast;
-	_qsort(firstNode, lastNode, *cmp, &newFirst, &newLast);
+	Qsort(firstNode, lastNode, *cmp, &newFirst, &newLast);
 
 	firstNode = newFirst;
 	lastNode = newLast;

@@ -26,37 +26,37 @@ float distance(sPoint point, sPoint point2)
 
 bool sortByFirstASC(sPerson& a, sPerson& b) { 
 	if (a.first == b.first) {
-		return a.last < b.last;
+		return a.last > b.last;
 	}
 	else {
-		return a.first < b.first;
+		return a.first > b.first;
 	}
 }
 
 bool sortByFirstDESC(sPerson& a, sPerson& b) {
 	if (a.first == b.first) {
-		return a.last > b.last;
+		return a.last < b.last;
 	}
 	else {
-		return a.first > b.first;
+		return a.first < b.first;
 	}
 }
 
 bool sortByLastASC(sPerson& a, sPerson& b) {
 	if (a.last == b.last) {
-		return a.first < b.first;
+		return a.first > b.first;
 	}
 	else {
-		return a.last < b.last;
+		return a.last > b.last;
 	}
 }
 
 bool sortByLastDESC(sPerson& a, sPerson& b) {
 	if (a.last == b.last) {
-		return a.first > b.first;
+		return a.first < b.first;
 	}
 	else {
-		return a.last > b.last;
+		return a.last < b.last;
 	}
 }
 

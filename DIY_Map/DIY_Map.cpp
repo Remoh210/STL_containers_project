@@ -300,14 +300,21 @@ bool DIY_Map::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personTo
 
 bool DIY_Map::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<sPerson>& vecPeopleToMatch, int maxNumberOfPeople)
 {
+	int added = 0;
 	this->startCall();
 	for (int i = 0; i < vecPeopleToMatch.size(); i++)
 	{
-		FindPeopleByName(vecPeople, vecPeopleToMatch[i], maxNumberOfPeople);
+		int cur = vecPeople.size();
+		FindPeopleByName(vecPeople, vecPeopleToMatch[i], maxNumberOfPeople - added);
+		added += (vecPeople.size() - cur);
+		if (added >= maxNumberOfPeople)
+		{
+			this->endCall();
+			return true;
+		}
 	}
 	this->endCall();
-	if (vecPeople.size() == 0) { return false; }
-	else { return true; }
+	return added > 0;
 }
 
 bool DIY_Map::GetPerformanceFromLastCall(sPerfData & callStats)

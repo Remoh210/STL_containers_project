@@ -301,14 +301,22 @@ bool DIY_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson perso
 
 bool DIY_Vector::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<sPerson>& vecPeopleToMatch, int maxNumberOfPeople)
 {
+
+	int added = 0;
 	this->startCall();
 	for (int i = 0; i < vecPeopleToMatch.size(); i++)
 	{
-		FindPeopleByName(vecPeople, vecPeopleToMatch[i], maxNumberOfPeople);
+		int cur = vecPeople.size();
+		FindPeopleByName(vecPeople, vecPeopleToMatch[i], maxNumberOfPeople - added);
+		added += (vecPeople.size() - cur);
+		if (added >= maxNumberOfPeople)
+		{
+			this->endCall();
+			return true;
+		}
 	}
 	this->endCall();
-	if (vecPeople.size() == 0) { return false; }
-	else { return true; }
+	return added > 0;
 	
 }
 
@@ -490,7 +498,7 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 
 	switch (type)
 	{
-	case ASC_FIRST_THEN_LAST:
+	case DESC_FIRST_THEN_LAST:
 	{
 		while (i <= j) {
 			while (m_Data[i].first < pivot.first) {
@@ -511,11 +519,11 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 
 		// Recursion
 		if (left < j) {
-			Qsort(left, j, ASC_FIRST_THEN_LAST);
+			Qsort(left, j, DESC_FIRST_THEN_LAST);
 		}
 
 		if (i < right) {
-			Qsort(i, right, ASC_FIRST_THEN_LAST);
+			Qsort(i, right, DESC_FIRST_THEN_LAST);
 		}
 		if (rec == 1)
 		{
@@ -540,7 +548,7 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 		}
 	}
 	break;
-	case DESC_FIRST_THEN_LAST:
+	case ASC_FIRST_THEN_LAST:
 	{
 
 		while (i <= j)
@@ -562,11 +570,11 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 		}
 
 		if (left < j) {
-			Qsort(left, j, DESC_FIRST_THEN_LAST);
+			Qsort(left, j, ASC_FIRST_THEN_LAST);
 		}
 
 		if (i < right) {
-			Qsort(i, right, DESC_FIRST_THEN_LAST);
+			Qsort(i, right, ASC_FIRST_THEN_LAST);
 		}
 		if (rec == 1)
 		{
@@ -574,9 +582,8 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 
 			while (!IsSortingFinished)
 			{
-				// Flag to exit
+				// exit
 				IsSortingFinished = true;
-
 				size_t length = this->GetSize() - 1;
 				for (size_t i = 0; i < length; i++)
 				{
@@ -592,7 +599,7 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 		}
 	}
 	break;
-	case ASC_LAST_THEN_FIRST:
+	case DESC_LAST_THEN_FIRST:
 	{
 		while (i <= j)
 		{
@@ -613,11 +620,11 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 		}
 
 		if (left < j) {
-			Qsort(left, j, ASC_LAST_THEN_FIRST);
+			Qsort(left, j, DESC_LAST_THEN_FIRST);
 		}
 
 		if (i < right) {
-			Qsort(i, right, ASC_LAST_THEN_FIRST);
+			Qsort(i, right, DESC_LAST_THEN_FIRST);
 		}
 
 		if (rec == 1)
@@ -642,7 +649,7 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 		}
 	}
 	break;
-	case DESC_LAST_THEN_FIRST:
+	case ASC_LAST_THEN_FIRST:
 	{
 		while (i <= j)
 		{
@@ -663,11 +670,11 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 		}
 
 		if (left < j) {
-			Qsort(left, j, DESC_LAST_THEN_FIRST);
+			Qsort(left, j, ASC_LAST_THEN_FIRST);
 		}
 
 		if (i < right) {
-			Qsort(i, right, DESC_LAST_THEN_FIRST);
+			Qsort(i, right, ASC_LAST_THEN_FIRST);
 		}
 		if (rec == 1)
 		{
@@ -692,7 +699,7 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 		}
 	}
 	break;
-	case ASC_BY_ID:
+	case DESC_BY_ID:
 	{
 		while (i <= j)
 		{
@@ -713,15 +720,15 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 		}
 
 		if (left < j) {
-			Qsort(left, j, ASC_BY_ID);
+			Qsort(left, j, DESC_BY_ID);
 		}
 
 		if (i < right) {
-			Qsort(i, right, ASC_BY_ID);
+			Qsort(i, right, DESC_BY_ID);
 		}
 	}
 	break;
-	case DESC_BY_ID:
+	case ASC_BY_ID :
 	{
 		while (i <= j)
 		{
@@ -741,11 +748,11 @@ void DIY_Vector::Qsort(int left, int right, eSortType type)
 			}
 		}
 		if (left < j) {
-			Qsort(left, j, DESC_BY_ID);
+			Qsort(left, j, ASC_BY_ID);
 		}
 
 		if (i < right) {
-			Qsort(i, right, DESC_BY_ID);
+			Qsort(i, right, ASC_BY_ID);
 		}
 	}
 	break;

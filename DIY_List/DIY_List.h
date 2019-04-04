@@ -81,7 +81,7 @@ private:
 
 	Node* firstNode;
 	Node* lastNode;
-	void _qsort(Node* left, Node* right, NodeComparer& cmp, Node** newHead, Node** newTail);
+	void Qsort(Node* left, Node* right, NodeComparer& cmp, Node** newHead, Node** newTail);
 
 	sPerfData m_perfData;
 	void startCall();

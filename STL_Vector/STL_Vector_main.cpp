@@ -63,12 +63,9 @@ int main()
 	jacobWithFirstOnly.health = 64.0f;
 	jacobWithFirstOnly.location = Point;
 
-	myVec.PushBack(michael);
 	myVec.PushBack(robin);
 	myVec.PushBack(fraser);
 	myVec.PushBack(jacob);
-	myVec.PushBack(fraserWithLastOnly);
-	myVec.PushBack(jacobWithFirstOnly);
 	
 	sPerson findperson;
 
@@ -104,13 +101,11 @@ int main()
 
 	for (unsigned int index = 0; index != 100 /*myVec.GetSize()*/; index++)
 	{
-		sPerson thePerson;
-		myVec.GetAt(index, thePerson);
 
-		std::cout << index << " "
-			<< thePerson.first << " "
-			<< thePerson.health << " "
-			<< thePerson.last << std::endl;
+		std::cout << sortedVec[index].uniqueID << " "
+			<< sortedVec[index].first << " "
+			<< sortedVec[index].health << " "
+			<< sortedVec[index].last << std::endl;
 	}
 
 	std::cout << "//////    Perfomance     //////" << std::endl;

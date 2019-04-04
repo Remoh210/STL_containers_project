@@ -480,7 +480,7 @@ bool STL_Map::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
 	this->startCall();
 	switch (sortType)
 	{
-	case iPersonMotron::ASC_FIRST_THEN_LAST:
+	case iPersonMotron::DESC_FIRST_THEN_LAST:
 	{
 		std::map<std::string, sPerson> mapCopy;
 
@@ -504,7 +504,7 @@ bool STL_Map::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
 		break;
 	}
 
-	case iPersonMotron::DESC_FIRST_THEN_LAST:
+	case iPersonMotron::ASC_FIRST_THEN_LAST:
 	{
 		std::map<std::string, sPerson> mapCopy;
 
@@ -528,7 +528,7 @@ bool STL_Map::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
 		break;
 	}
 		
-	case iPersonMotron::ASC_LAST_THEN_FIRST:
+	case iPersonMotron::DESC_LAST_THEN_FIRST:
 	{
 		std::map<std::string, sPerson> mapCopy;
 
@@ -550,7 +550,7 @@ bool STL_Map::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
 		}
 		break;
 	}
-	case iPersonMotron::DESC_LAST_THEN_FIRST:
+	case iPersonMotron::ASC_LAST_THEN_FIRST:
 	{
 
 		std::map<std::string, sPerson> mapCopy;

@@ -94,9 +94,9 @@ int main()
 	//myList.GetAt(1, findperson);
 	//cout << findperson.first << std::endl;
 	cout << "size :" << myList.GetSize() << std::endl;
-
+	std::cout << "//////    DESC_BY_HEALTH     //////" << std::endl;
 	std::vector<sPerson> sortedVec;
-	myList.SortPeople(sortedVec, iPersonMotron::DESC_FIRST_THEN_LAST);
+	myList.SortPeople(sortedVec, iPersonMotron::DESC_BY_HEALTH);
 
 	for (unsigned int index = 0; index < std::min(100, (int)myList.GetSize()); index++)
 	{

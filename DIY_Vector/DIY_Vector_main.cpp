@@ -1,5 +1,7 @@
 #include "DIY_Vector.h"
 #include <iostream>
+
+std::vector<sPerson> pplToFind;
 using namespace std;
 int main()
 {
@@ -10,8 +12,8 @@ int main()
 	Point.z = 0.0f;
 
 	sPerson michael;
-	michael.first = "";
-	michael.last = "NEBEL";
+	michael.first = "BESS";
+	michael.last = "";
 	michael.uniqueID = 0;
 	michael.age = 20;
 	michael.health = 100.0f;
@@ -19,8 +21,8 @@ int main()
 
 	sPerson robin;
 	Point.x += 10.0f;
-	robin.first = "Robin";
-	robin.last = "Bobbin";
+	robin.first = "DELMA";
+	robin.last = "";
 	robin.uniqueID = 1;
 	robin.age = 26;
 	robin.health = 80.0f;
@@ -28,8 +30,8 @@ int main()
 
 	sPerson fraser;
 	Point.z += 10.0f;
-	fraser.first = "Fraser";
-	fraser.last = "Fareast";
+	fraser.first = "MOSE";
+	fraser.last = "";
 	fraser.uniqueID = 2;
 	fraser.age = 19;
 	fraser.health = 30.0f;
@@ -63,12 +65,12 @@ int main()
 	jacobWithFirstOnly.health = 64.0f;
 	jacobWithFirstOnly.location = Point;
 
-	myVec.PushBack(michael);
-	myVec.PushBack(robin);
-	myVec.PushBack(fraser);
-	myVec.PushBack(jacob);
-	myVec.PushBack(fraserWithLastOnly);
-	myVec.PushBack(jacobWithFirstOnly);
+	pplToFind.push_back(michael);
+	pplToFind.push_back(robin);
+	pplToFind.push_back(fraser);
+	pplToFind.push_back(jacob);
+	pplToFind.push_back(fraserWithLastOnly);
+	pplToFind.push_back(jacobWithFirstOnly);
 	
 	sPerson findperson;
 
@@ -97,7 +99,7 @@ int main()
 	{
 
 
-		std::cout << index << " "
+			std::cout << sortedVec[index].uniqueID << " "
 			<< sortedVec[index].first << " "
 			<< sortedVec[index].last << " "
 			<< sortedVec[index].health << std::endl;
@@ -193,6 +195,24 @@ int main()
 			<< vec_findByNameFirst[i].location.z << ")" << std::endl;
 		std::cout << std::endl;
 	}
+
+
+	std::cout << "//////    FindPeople by First Multiple    //////" << std::endl;
+	vec_findByNameFirst.clear();
+	myVec.FindPeopleByName(vec_findByNameFirst, pplToFind, 3);
+	for (int i = 0; i < vec_findByNameFirst.size(); i++)
+	{
+		std::cout << "First: " << vec_findByNameFirst[i].first << std::endl;
+		std::cout << "Last: " << vec_findByNameFirst[i].last << std::endl;
+		std::cout << "Age: " << vec_findByNameFirst[i].age << std::endl;
+		std::cout << "Unique ID: " << vec_findByNameFirst[i].uniqueID << std::endl;
+		std::cout << "Health: " << vec_findByNameFirst[i].health << std::endl;
+		std::cout << "Location: (" << vec_findByNameFirst[i].location.x << "," << vec_findByNameFirst[i].location.y << ","
+			<< vec_findByNameFirst[i].location.z << ")" << std::endl;
+		std::cout << std::endl;
+	}
+
+	
 
 
 	std::cout << "//////    FindPeople by Last     //////" << std::endl;

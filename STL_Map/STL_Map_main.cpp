@@ -87,20 +87,18 @@ int main()
 	
 
 	//myVec.GetAt(1, findperson);
-	cout << "//////    Sort by health     //////" << std::endl;
+	cout << "//////    DESC_BY_HEALTH     //////" << std::endl;
 	cout << "size :" << myMap.GetSize() << std::endl;
 	std::vector<sPerson> sortedVec;
 	myMap.SortPeople(sortedVec,  iPersonMotron::DESC_BY_HEALTH);
 
 	for (unsigned int index = 0; index != 100 /*myVec.GetSize()*/; index++)
 	{
-		sPerson thePerson;
-		myMap.GetAt(index, thePerson);
 
-		std::cout << index << " "
-			<< thePerson.first << " "
-			<< thePerson.health << " "
-			<< thePerson.last << std::endl;
+		std::cout << sortedVec[index].uniqueID << " "
+			<< sortedVec[index].first << " "
+			<< sortedVec[index].health << " "
+			<< sortedVec[index].last << std::endl;
 	}
 
 	cout << "//////    Sorted vec by health     //////" << std::endl;
@@ -108,7 +106,7 @@ int main()
 	for (unsigned int index = 0; index != 100 /*myVec.GetSize()*/; index++)
 	{
 
-		std::cout << index << " "
+			std::cout << sortedVec[index].uniqueID << " "
 			<< sortedVec[index].first << " "
 			<< sortedVec[index].health << " "
 			<< sortedVec[index].last << std::endl;
