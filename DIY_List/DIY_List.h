@@ -79,8 +79,8 @@ private:
 		}
 	};
 
-	Node *firstNode;
-	Node *lastNode;
+	Node* firstNode;
+	Node* lastNode;
 	void _qsort(Node* left, Node* right, NodeComparer& cmp, Node** newHead, Node** newTail);
 
 	sPerfData m_perfData;

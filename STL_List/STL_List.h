@@ -6,6 +6,7 @@
 #include "iPersonMotron.h"
 #include <vector>
 #include <list>
+#include <time.h>
 
 
 class  STL_List : public iPersonMotron
@@ -23,7 +24,7 @@ public:
 	bool FindPeopleByName(std::vector<sPerson> &vecPeople, sPerson personToMatch, int maxNumberOfPeople = INT_MAX);
 	bool FindPeopleByName(std::vector<sPerson> &vecPeople, std::vector<sPerson> &vecPeopleToMatch, int maxNumberOfPeople = INT_MAX);
 	//Index
-	bool GetAt(unsigned int index, sPerson &thePerson);
+	//bool GetAt(unsigned int index, sPerson &thePerson);
 	//ID
 	bool FindPersonByID(sPerson &person, unsigned long long uniqueID);
 	//Radius
@@ -41,7 +42,7 @@ public:
 
 
 
-	bool GetPerformanceFromLastCall(sPerfData &callStats) { return false; }
+	bool GetPerformanceFromLastCall(sPerfData &callStats);
 	eContainerType getContainerType(void);
 
 	unsigned int GetSize(void);
@@ -49,6 +50,11 @@ public:
 
 private:
 	std::list<sPerson> mList_Person;
+	sPerfData m_perfData;
+	void startCall();
+	void updateMemoryUsage();
+	void endCall();
+	clock_t start_time;
 };
 
 

@@ -5,7 +5,7 @@
 #include "cPerson.h"
 #include "iPersonMotron.h"
 #include <vector>
-
+#include <time.h>
 
 class  STL_Vector : public iPersonMotron
 {
@@ -40,7 +40,7 @@ public:
 
 
 
-	bool GetPerformanceFromLastCall(sPerfData &callStats) { return false; }
+	bool GetPerformanceFromLastCall(sPerfData &callStats);
 	eContainerType getContainerType(void);
 
 	unsigned int GetSize(void);
@@ -51,7 +51,11 @@ private:
     std::vector<sPerson> mVec_Person;
 	//Generate n random data for all people
 	//Called inside LoadDataFilesIntoContainer();
-	void GenerateData(std::string first, int number = 10);
+	sPerfData m_perfData;
+	void startCall();
+	void updateMemoryUsage();
+	void endCall();
+	clock_t start_time;
 };
 
 

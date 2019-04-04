@@ -2,7 +2,6 @@
 #include "cPerson.h"
 #include "DIY_List.h"
 #include <iostream>
-#include <time.h>
 #include <Windows.h>
 #include <psapi.h>
 #include <fstream>
@@ -23,7 +22,7 @@ bool DIY_List::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, s
 	std::vector<std::string> vec_FemaleNames;
 	std::vector<std::string> vec_MaleNames;
 	std::vector<std::string> vec_Surnames;
-	//this->clear();
+	this->clear();
 	//Load female first names
 	std::ifstream file(firstNameFemaleFileName.c_str());
 	//Return false if no file
@@ -96,8 +95,8 @@ bool DIY_List::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, s
 		//Male
 		if (MaleFemale < 5)
 		{
-			int NameRandIndex = rand() % vec_MaleNames.size();
-			int SurnameRandIndex = rand() % vec_Surnames.size();
+			int NameRandIndex = rand() % vec_MaleNames.size() - 1;
+			int SurnameRandIndex = rand() % vec_Surnames.size() - 1;
 			sPerson curPerson;
 			curPerson.first = vec_MaleNames[NameRandIndex];
 			curPerson.last = vec_Surnames[SurnameRandIndex];
@@ -121,8 +120,8 @@ bool DIY_List::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, s
 		//Female
 		else
 		{
-			int NameRandIndex = rand() % vec_FemaleNames.size();
-			int SurnameRandIndex = rand() % vec_Surnames.size();
+			int NameRandIndex = rand() % vec_FemaleNames.size() - 1;
+			int SurnameRandIndex = rand() % vec_Surnames.size() - 1;
 			sPerson curPerson;
 			curPerson.first = vec_FemaleNames[NameRandIndex];
 			curPerson.last = vec_Surnames[SurnameRandIndex];
@@ -298,6 +297,20 @@ bool DIY_List::FindPeople(std::vector<sPerson> &vecPeople, sPoint location, floa
 	return added_cnt > 0;
 }
 
+//class FirstNameComparer : public NodeComparer
+//{
+//public:
+//	bool operator()(sPerson *a, sPerson *b)
+//	{
+//		if (a->first == b->first) {
+//			return a->last <= b->last;
+//		}
+//		else {
+//			return a->first <= b->first;
+//		}
+//	};
+//};
+
 class FirstNameComparer : public NodeComparer
 {
 public:
@@ -306,15 +319,25 @@ public:
 		return a->first <= b->first;
 	};
 };
-
-class LastNameComparer : public NodeComparer
-{
-public:
-	bool operator()(sPerson *a, sPerson *b)
-	{
-		return a->last <= b->last;
-	};
-};
+//
+//
+//class FirstNameComparer : public NodeComparer
+//{
+//public:
+//	bool operator()(sPerson *a, sPerson *b)
+//	{
+//		return a->first <= b->first;
+//	};
+//};
+//
+//class LastNameComparer : public NodeComparer
+//{
+//public:
+//	bool operator()(sPerson *a, sPerson *b)
+//	{
+//		return a->last <= b->last;
+//	};
+//};
 
 void DIY_List::_qsort(Node *left, Node *right, NodeComparer &cmp, Node **newHead, Node **newTail)
 {
@@ -364,6 +387,7 @@ void DIY_List::_qsort(Node *left, Node *right, NodeComparer &cmp, Node **newHead
 bool DIY_List::GetPerformanceFromLastCall(sPerfData &callStats)
 {
 	callStats = this->m_perfData;
+	return true;
 }
 
 void DIY_List::startCall()
@@ -418,18 +442,50 @@ void DIY_List::endCall()
 //Sort
 bool DIY_List::SortPeople(std::vector<sPerson> &vecPeople, eSortType sortType)
 {
-	//implement other nameComparers and make a switch here
-	FirstNameComparer cmp;
+	
+	
 
-	Node *newFirst, *newLast;
 
-	_qsort(firstNode, lastNode, cmp, &newFirst, &newLast);
-	firstNode = newFirst;
-	lastNode = newLast;
-	for (Node *i = firstNode; i != NULL; i = i->nextNode)
+
+	switch (sortType)
 	{
-		vecPeople.push_back(*i->value);
+	case iPersonMotron::ASC_FIRST_THEN_LAST:
+	{
+		Node* newFirst;
+	    Node* newLast;
+		FirstNameComparer cmp;
+		_qsort(firstNode, lastNode, cmp, &newFirst, &newLast);
+
+		firstNode = newFirst;
+		lastNode = newLast;
+		for (Node *i = firstNode; i != NULL; i = i->nextNode)
+		{
+			vecPeople.push_back(*i->value);
+		}
+		break;
 	}
+		
+	case iPersonMotron::DESC_FIRST_THEN_LAST:
+		break;
+	case iPersonMotron::ASC_LAST_THEN_FIRST:
+		break;
+	case iPersonMotron::DESC_LAST_THEN_FIRST:
+		break;
+	case iPersonMotron::ASC_BY_ID:
+		break;
+	case iPersonMotron::DESC_BY_ID:
+		break;
+	case iPersonMotron::ASC_BY_HEALTH:
+		break;
+	case iPersonMotron::DESC_BY_HEALTH:
+		break;
+	default:
+		break;
+	}
+
+
+	
+
 
 	return true;
 }
@@ -491,7 +547,7 @@ void DIY_List::SetAt(int idx, sPerson &p)
 
 void DIY_List::PushBack(sPerson &person)
 {
-	Node *newNode = new Node(&person);
+	Node* newNode = new Node(&person);
 	if (this->firstNode == NULL)
 	{
 		this->firstNode = newNode;

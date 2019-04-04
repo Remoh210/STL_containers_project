@@ -3,7 +3,7 @@
 using namespace std;
 int main()
 {
-	DIY_List myVec;
+	DIY_List myList;
 	sPoint Point;
 	Point.x = 0.0f;
 	Point.y = 0.0f;
@@ -63,47 +63,59 @@ int main()
 	jacobWithFirstOnly.health = 64.0f;
 	jacobWithFirstOnly.location = Point;
 
-	myVec.PushBack(michael);
-	myVec.PushBack(robin);
-	myVec.PushBack(fraser);
-	myVec.PushBack(jacob);
-	myVec.PushBack(fraserWithLastOnly);
-	myVec.PushBack(jacobWithFirstOnly);
+	myList.PushBack(michael);
+	myList.PushBack(robin);
+	myList.PushBack(fraser);
+	myList.PushBack(jacob);
+	myList.PushBack(fraserWithLastOnly);
+	myList.PushBack(jacobWithFirstOnly);
 
 	sPerson findperson;
 
-	 if (!myVec.LoadDataFilesIntoContainer("../USCen/dist.female.first.txt",
-	     "../USCen/dist.male.first.txt", "../USCen/US_LastNames.txt"))
-	 {
-	     std::cout << "error" << std::endl;
-	 }
-	if (!myVec.LoadDataFilesIntoContainer("USCen/dist.female.first.txt",
-	                                      "USCen/dist.male.first.txt", "USCen/US_LastNames.txt"))
+
+	if (!myList.LoadDataFilesIntoContainer("../USCen/dist.female.first.txt",
+		"../USCen/dist.male.first.txt", "../USCen/US_LastNames.txt"))
 	{
-	    std::cout << "error" << std::endl;
+		std::cout << "error NO such file found" << std::endl;
+		system("pause");
+		return 0;
 	}
 
+	sPerfData perfData;
+	myList.GetPerformanceFromLastCall(perfData);
+	std::cout << "//////   Loading data perfomance     //////" << std::endl;
+	std::cout << " elapsedCallTime_ms  :" << std::fixed << perfData.elapsedCallTime_ms << std::endl;
+	std::cout << " memoryUsageBytes_avg: " << std::fixed << perfData.memoryUsageBytes_avg << std::endl;
+	std::cout << " memoryUsageBytes_max: " << std::fixed << perfData.memoryUsageBytes_max << std::endl;
+	std::cout << " memoryUsageBytes_min: " << std::fixed << perfData.memoryUsageBytes_min << std::endl;
 
-	//myVec.GetAt(1, findperson);
+
+	//myList.GetAt(1, findperson);
 	//cout << findperson.first << std::endl;
-	cout << "size :" << myVec.GetSize() << std::endl;
+	cout << "size :" << myList.GetSize() << std::endl;
 
-	//std::vector<sPerson> sortedVec;
-	//myVec.SortPeople(sortedVec, iPersonMotron::ASC_BY_HEALTH);
+	std::vector<sPerson> sortedVec;
+	myList.SortPeople(sortedVec, iPersonMotron::ASC_FIRST_THEN_LAST);
 
-	//for (unsigned int index = 0; index != 100 /*myVec.GetSize()*/; index++)
-	//{
+	for (unsigned int index = 0; index != 100 /*myList.GetSize()*/; index++)
+	{
 
 
-	//	std::cout << index << " "
-	//		<< sortedVec[index].first << " "
-	//		<< sortedVec[index].last << " "
-	//		<< sortedVec[index].health << std::endl;
-	//}
+		std::cout << index << " "
+			<< sortedVec[index].first << " "
+			<< sortedVec[index].last << " "
+			<< sortedVec[index].health << std::endl;
+	}
+	myList.GetPerformanceFromLastCall(perfData);
+	std::cout << "//////   Soarting data perfomance     //////" << std::endl;
+	std::cout << " elapsedCallTime_ms  :" << std::fixed << perfData.elapsedCallTime_ms << std::endl;
+	std::cout << " memoryUsageBytes_avg: " << std::fixed << perfData.memoryUsageBytes_avg << std::endl;
+	std::cout << " memoryUsageBytes_max: " << std::fixed << perfData.memoryUsageBytes_max << std::endl;
+	std::cout << " memoryUsageBytes_min: " << std::fixed << perfData.memoryUsageBytes_min << std::endl;
 
 	std::cout << "//////    FindPersonByID     //////" << std::endl;
 	sPerson findByIdPerson;
-	myVec.FindPersonByID(findByIdPerson, 2);
+	myList.FindPersonByID(findByIdPerson, 2);
 	std::cout << "First: " << findByIdPerson.first << std::endl;
 	std::cout << "Last: " << findByIdPerson.last << std::endl;
 	std::cout << "Age: " << findByIdPerson.age << std::endl;
@@ -116,7 +128,7 @@ int main()
 	std::vector<sPerson> vec_findByRadius;
 	sPoint loc;
 	loc.x = 0.1f; loc.y = 1.1f; loc.z = 3.1f;
-	myVec.FindPeople(vec_findByRadius, loc, 1000.0f, 2);
+	myList.FindPeople(vec_findByRadius, loc, 1000.0f, 2);
 	for (int i = 0; i < vec_findByRadius.size(); i++)
 	{
 		std::cout << "First: " << vec_findByRadius[i].first << std::endl;
@@ -131,7 +143,7 @@ int main()
 
 	std::cout << "//////    FindPeopleByHealth     //////" << std::endl;
 	std::vector<sPerson> vec_findByHealth;
-	myVec.FindPeople(vec_findByHealth, 40, 75, 3);
+	myList.FindPeople(vec_findByHealth, 40, 75, 3);
 	for (int i = 0; i < vec_findByHealth.size(); i++)
 	{
 		std::cout << "First: " << vec_findByHealth[i].first << std::endl;
@@ -149,7 +161,7 @@ int main()
 	loc.x = 10.0f;
 	loc.y = 1.0f;
 	loc.z = 15;
-	myVec.FindPeople(vec_findByHealthRad, loc, 1000, 0.0f, 80.0f, 3);
+	myList.FindPeople(vec_findByHealthRad, loc, 1000, 0.0f, 80.0f, 3);
 	for (int i = 0; i < vec_findByHealthRad.size(); i++)
 	{
 		std::cout << "First: " << vec_findByHealthRad[i].first << std::endl;
@@ -165,7 +177,7 @@ int main()
 
 	std::cout << "//////    FindPeople by First     //////" << std::endl;
 	std::vector<sPerson> vec_findByNameFirst;
-	myVec.FindPeopleByName(vec_findByNameFirst, jacobWithFirstOnly);
+	myList.FindPeopleByName(vec_findByNameFirst, jacobWithFirstOnly);
 	for (int i = 0; i < vec_findByNameFirst.size(); i++)
 	{
 		std::cout << "First: " << vec_findByNameFirst[i].first << std::endl;
@@ -181,7 +193,7 @@ int main()
 
 	std::cout << "//////    FindPeople by Last     //////" << std::endl;
 	std::vector<sPerson> vec_findByNameLast;
-	myVec.FindPeopleByName(vec_findByNameLast, michael);
+	myList.FindPeopleByName(vec_findByNameLast, michael);
 	for (int i = 0; i < vec_findByNameLast.size(); i++)
 	{
 		std::cout << "First: " << vec_findByNameLast[i].first << std::endl;

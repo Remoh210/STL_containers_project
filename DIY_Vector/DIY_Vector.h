@@ -5,7 +5,7 @@
 
 #include "cPerson.h"
 #include "iPersonMotron.h"
-
+#include <time.h>
 
 class  DIY_Vector : public iPersonMotron
 {
@@ -40,7 +40,7 @@ public:
 
 
 
-	bool GetPerformanceFromLastCall(sPerfData &callStats) { return false; }
+	bool GetPerformanceFromLastCall(sPerfData &callStats);
 	eContainerType getContainerType(void);
 
 	void SetCapacity(unsigned int newCapacity);
@@ -49,7 +49,6 @@ public:
 	void clear();
 
 	void PushBack(sPerson person);
-	void InsertAt(unsigned int index, sPerson person);
 
 private:
 
@@ -57,6 +56,12 @@ private:
 	unsigned int m_CurSize;		
 	unsigned int m_next;
 	void Qsort(int left, int right, eSortType type);
+
+	sPerfData m_perfData;
+	void startCall();
+	void updateMemoryUsage();
+	void endCall();
+	clock_t start_time;
 };
 
 #endif

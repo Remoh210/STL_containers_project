@@ -25,7 +25,7 @@
     <ClCompile Include="DIY_Vector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="DIY_Vector_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

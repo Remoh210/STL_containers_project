@@ -6,6 +6,7 @@
 #include "iPersonMotron.h"
 #include <vector>
 #include <map>
+#include <time.h>
 
 
 class  STL_Map : public iPersonMotron
@@ -41,7 +42,7 @@ public:
 
 
 
-	bool GetPerformanceFromLastCall(sPerfData &callStats) { return false; }
+	bool GetPerformanceFromLastCall(sPerfData &callStats);
 	eContainerType getContainerType(void);
 
 	unsigned int GetSize(void);
@@ -49,10 +50,11 @@ public:
 
 private:
 	std::map<unsigned int, sPerson> mMap_Person;
-    //std::vector<sPerson> mVec_Person;
-	//Generate n random data for all people
-	//Called inside LoadDataFilesIntoContainer();
-	void GenerateData(std::string first, int number = 10);
+	sPerfData m_perfData;
+	void startCall();
+	void updateMemoryUsage();
+	void endCall();
+	clock_t start_time;
 };
 
 

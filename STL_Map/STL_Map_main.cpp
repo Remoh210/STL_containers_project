@@ -68,19 +68,19 @@ int main()
 
 
 
-	#ifdef _WIN32
+
 	if (!myMap.LoadDataFilesIntoContainer("../USCen/dist.female.first.txt",
 		"../USCen/dist.male.first.txt", "../USCen/US_LastNames.txt"))
 	{
 		std::cout << "error" << std::endl;
 	}
-	#elif __APPLE__	
-	if (!myMap.LoadDataFilesIntoContainer("USCen/dist.female.first.txt",
-		"USCen/dist.male.first.txt", "USCen/US_LastNames.txt"))
-	{
-		std::cout << "error" << std::endl;
-	}
-	#endif
+	sPerfData perfData;
+	myMap.GetPerformanceFromLastCall(perfData);
+	std::cout << "//////    Perfomance     //////" << std::endl;
+	std::cout << " elapsedCallTime_ms  :" << std::fixed << perfData.elapsedCallTime_ms << std::endl;
+	std::cout << " memoryUsageBytes_avg: " << std::fixed << perfData.memoryUsageBytes_avg << std::endl;
+	std::cout << " memoryUsageBytes_max: " << std::fixed << perfData.memoryUsageBytes_max << std::endl;
+	std::cout << " memoryUsageBytes_min: " << std::fixed << perfData.memoryUsageBytes_min << std::endl;
 
 
 
@@ -90,7 +90,7 @@ int main()
 	cout << "//////    Sort by health     //////" << std::endl;
 	cout << "size :" << myMap.GetSize() << std::endl;
 	std::vector<sPerson> sortedVec;
-	myMap.SortPeople(sortedVec,  iPersonMotron::DESC_FIRST_THEN_LAST);
+	myMap.SortPeople(sortedVec,  iPersonMotron::DESC_BY_HEALTH);
 
 	for (unsigned int index = 0; index != 100 /*myVec.GetSize()*/; index++)
 	{
@@ -156,6 +156,13 @@ int main()
         << vec_findByHealth[i].location.z << ")" << std::endl;
         std::cout << std::endl;
     }
+
+	myMap.GetPerformanceFromLastCall(perfData);
+	std::cout << "//////    Perfomance     //////" << std::endl;
+	std::cout << " elapsedCallTime_ms  :" << std::fixed << perfData.elapsedCallTime_ms << std::endl;
+	std::cout << " memoryUsageBytes_avg: " << std::fixed << perfData.memoryUsageBytes_avg << std::endl;
+	std::cout << " memoryUsageBytes_max: " << std::fixed << perfData.memoryUsageBytes_max << std::endl;
+	std::cout << " memoryUsageBytes_min: " << std::fixed << perfData.memoryUsageBytes_min << std::endl;
 
 	std::cout << "//////    FindPeople by health and radius     //////" << std::endl;
 	std::vector<sPerson> vec_findByHealthRad;

@@ -1,9 +1,9 @@
-#include "STL_Vector.h"
+#include "DIY_Vector.h"
 #include <iostream>
 using namespace std;
 int main()
 {
-	STL_Vector myVec;
+	DIY_Vector myVec;
 	sPoint Point;
 	Point.x = 0.0f;
 	Point.y = 0.0f;
@@ -11,7 +11,7 @@ int main()
 
 	sPerson michael;
 	michael.first = "";
-	michael.last = "SMITH";
+	michael.last = "NEBEL";
 	michael.uniqueID = 0;
 	michael.age = 20;
 	michael.health = 100.0f;
@@ -72,42 +72,34 @@ int main()
 	
 	sPerson findperson;
 
-
-
-	#ifdef _WIN32
-	if (!myVec.LoadDataFilesIntoContainer("../USCen/dist.female.first.txt",
-		"../USCen/dist.male.first.txt", "../USCen/US_LastNames.txt"))
-	{
-		std::cout << "error" << std::endl;
-	}
-	#elif __APPLE__	
-	if (!myVec.LoadDataFilesIntoContainer("USCen/dist.female.first.txt",
-		"USCen/dist.male.first.txt", "USCen/US_LastNames.txt"))
-	{
-		std::cout << "error" << std::endl;
-	}
-	#endif
-
-
-
+    if (!myVec.LoadDataFilesIntoContainer("../USCen/dist.female.first.txt",
+        "../USCen/dist.male.first.txt", "../USCen/US_LastNames.txt"))
+    {
+        std::cout << "error" << std::endl;
+    }
+	sPerfData perfData;
+	myVec.GetPerformanceFromLastCall(perfData);
+	std::cout << "//////    Perfomance     //////" << std::endl;
+	std::cout << " elapsedCallTime_ms  :" << std::fixed << perfData.elapsedCallTime_ms << std::endl;
+	std::cout << " memoryUsageBytes_avg: " << std::fixed << perfData.memoryUsageBytes_avg << std::endl;
+	std::cout << " memoryUsageBytes_max: " << std::fixed << perfData.memoryUsageBytes_max << std::endl;
+	std::cout << " memoryUsageBytes_min: " << std::fixed << perfData.memoryUsageBytes_min << std::endl;
 	
 
-	//myVec.GetAt(1, findperson);
-	//cout << findperson.first << std::endl;
+;
 	cout << "size :" << myVec.GetSize() << std::endl;
-	//cout << "capacity :" << myVec.GetCapacity() << std::endl;
+	cout << "capacity :" << myVec.GetCapacity() << std::endl;
 	std::vector<sPerson> sortedVec;
 	myVec.SortPeople(sortedVec,  iPersonMotron::ASC_BY_HEALTH);
 
 	for (unsigned int index = 0; index != 100 /*myVec.GetSize()*/; index++)
 	{
-		sPerson thePerson;
-		myVec.GetAt(index, thePerson);
+
 
 		std::cout << index << " "
-			<< thePerson.first << " "
-			<< thePerson.health << " "
-			<< thePerson.last << std::endl;
+			<< sortedVec[index].first << " "
+			<< sortedVec[index].last << " "
+			<< sortedVec[index].health << std::endl;
 	}
 
 	std::cout << "//////    FindPersonByID     //////" << std::endl;
@@ -125,7 +117,7 @@ int main()
 	std::vector<sPerson> vec_findByRadius;
 	sPoint loc;
 	loc.x = 0.1f; loc.y = 1.1f; loc.z = 3.1f;
-	myVec.FindPeople(vec_findByRadius, loc, 30.0f, 2);
+	myVec.FindPeople(vec_findByRadius, loc, 1000.0f, 2);
 	for (int i = 0; i < vec_findByRadius.size(); i++)
 	{
 		std::cout << "First: " << vec_findByRadius[i].first << std::endl;
@@ -140,7 +132,7 @@ int main()
     
     std::cout << "//////    FindPeopleByHealth     //////" << std::endl;
     std::vector<sPerson> vec_findByHealth;
-    myVec.FindPeople(vec_findByHealth, 40, 75, 10);
+    myVec.FindPeople(vec_findByHealth, 40, 75, 3);
     for (int i = 0; i < vec_findByHealth.size(); i++)
     {
         std::cout << "First: " << vec_findByHealth[i].first << std::endl;
@@ -153,12 +145,19 @@ int main()
         std::cout << std::endl;
     }
 
+	myVec.GetPerformanceFromLastCall(perfData);
+	std::cout << "//////    Perfomance     //////" << std::endl;
+	std::cout << " elapsedCallTime_ms  :" << std::fixed << perfData.elapsedCallTime_ms << std::endl;
+	std::cout << " memoryUsageBytes_avg: " << std::fixed << perfData.memoryUsageBytes_avg << std::endl;
+	std::cout << " memoryUsageBytes_max: " << std::fixed << perfData.memoryUsageBytes_max << std::endl;
+	std::cout << " memoryUsageBytes_min: " << std::fixed << perfData.memoryUsageBytes_min << std::endl;
+
 	std::cout << "//////    FindPeople by health and radius     //////" << std::endl;
 	std::vector<sPerson> vec_findByHealthRad;
 	loc.x = 10.0f;
 	loc.y = 1.0f;
 	loc.z = 15;
-	myVec.FindPeople(vec_findByHealthRad, loc, 199, 0.0f, 80.0f);
+	myVec.FindPeople(vec_findByHealthRad, loc, 1000, 0.0f, 80.0f, 3);
 	for (int i = 0; i < vec_findByHealthRad.size(); i++)
 	{
 		std::cout << "First: " << vec_findByHealthRad[i].first << std::endl;

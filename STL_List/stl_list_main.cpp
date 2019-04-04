@@ -3,7 +3,7 @@
 using namespace std;
 int main()
 {
-	STL_List myVec;
+	STL_List myList;
 	sPoint Point;
 	Point.x = 0.0f;
 	Point.y = 0.0f;
@@ -63,43 +63,37 @@ int main()
 	jacobWithFirstOnly.health = 64.0f;
 	jacobWithFirstOnly.location = Point;
 
-	myVec.PushBack(michael);
-	myVec.PushBack(robin);
-	myVec.PushBack(fraser);
-	myVec.PushBack(jacob);
-	myVec.PushBack(fraserWithLastOnly);
-	myVec.PushBack(jacobWithFirstOnly);
+	myList.PushBack(michael);
+	myList.PushBack(robin);
+	myList.PushBack(fraser);
+	myList.PushBack(jacob);
+	myList.PushBack(fraserWithLastOnly);
+	myList.PushBack(jacobWithFirstOnly);
 
 	sPerson findperson;
 
 
-
-#ifdef _WIN32
-	if (!myVec.LoadDataFilesIntoContainer("../USCen/dist.female.first.txt",
+	if (!myList.LoadDataFilesIntoContainer("../USCen/dist.female.first.txt",
 		"../USCen/dist.male.first.txt", "../USCen/US_LastNames.txt"))
 	{
 		std::cout << "error" << std::endl;
 	}
-#elif __APPLE__	
-	if (!myVec.LoadDataFilesIntoContainer("USCen/dist.female.first.txt",
-		"USCen/dist.male.first.txt", "USCen/US_LastNames.txt"))
-	{
-		std::cout << "error" << std::endl;
-	}
-#endif
+
+	sPerfData perfData;
+	myList.GetPerformanceFromLastCall(perfData);
+	std::cout << "//////    Perfomance     //////" << std::endl;
+	std::cout << " elapsedCallTime_ms  :" << std::fixed << perfData.elapsedCallTime_ms << std::endl;
+	std::cout << " memoryUsageBytes_avg: " << std::fixed << perfData.memoryUsageBytes_avg << std::endl;
+	std::cout << " memoryUsageBytes_max: " << std::fixed << perfData.memoryUsageBytes_max << std::endl;
+	std::cout << " memoryUsageBytes_min: " << std::fixed << perfData.memoryUsageBytes_min << std::endl;
 
 
 
-
-
-	//myVec.GetAt(1, findperson);
-	//cout << findperson.first << std::endl;
-	cout << "size :" << myVec.GetSize() << std::endl;
-	//cout << "capacity :" << myVec.GetCapacity() << std::endl;
+	cout << "size :" << myList.GetSize() << std::endl;
 	std::vector<sPerson> sortedVec;
-	myVec.SortPeople(sortedVec, iPersonMotron::ASC_BY_HEALTH);
+	myList.SortPeople(sortedVec, iPersonMotron::ASC_BY_HEALTH);
 
-	for (unsigned int index = 0; index != 100 /*myVec.GetSize()*/; index++)
+	for (unsigned int index = 0; index != 100 /*myList.GetSize()*/; index++)
 	{
 
 
@@ -111,7 +105,8 @@ int main()
 
 	std::cout << "//////    FindPersonByID     //////" << std::endl;
 	sPerson findByIdPerson;
-	myVec.FindPersonByID(findByIdPerson, 2);
+	findByIdPerson.uniqueID = 196;
+	myList.FindPersonByID(findByIdPerson, 2);
 	std::cout << "First: " << findByIdPerson.first << std::endl;
 	std::cout << "Last: " << findByIdPerson.last << std::endl;
 	std::cout << "Age: " << findByIdPerson.age << std::endl;
@@ -124,7 +119,7 @@ int main()
 	std::vector<sPerson> vec_findByRadius;
 	sPoint loc;
 	loc.x = 0.1f; loc.y = 1.1f; loc.z = 3.1f;
-	myVec.FindPeople(vec_findByRadius, loc, 30.0f, 2);
+	myList.FindPeople(vec_findByRadius, loc, 1000.0f, 2);
 	for (int i = 0; i < vec_findByRadius.size(); i++)
 	{
 		std::cout << "First: " << vec_findByRadius[i].first << std::endl;
@@ -139,7 +134,7 @@ int main()
 
 	std::cout << "//////    FindPeopleByHealth     //////" << std::endl;
 	std::vector<sPerson> vec_findByHealth;
-	myVec.FindPeople(vec_findByHealth, 40, 75, 10);
+	myList.FindPeople(vec_findByHealth, 40, 75, 10);
 	for (int i = 0; i < vec_findByHealth.size(); i++)
 	{
 		std::cout << "First: " << vec_findByHealth[i].first << std::endl;
@@ -152,12 +147,19 @@ int main()
 		std::cout << std::endl;
 	}
 
+	myList.GetPerformanceFromLastCall(perfData);
+	std::cout << "//////    Perfomance     //////" << std::endl;
+	std::cout << " elapsedCallTime_ms  :" << std::fixed << perfData.elapsedCallTime_ms << std::endl;
+	std::cout << " memoryUsageBytes_avg: " << std::fixed << perfData.memoryUsageBytes_avg << std::endl;
+	std::cout << " memoryUsageBytes_max: " << std::fixed << perfData.memoryUsageBytes_max << std::endl;
+	std::cout << " memoryUsageBytes_min: " << std::fixed << perfData.memoryUsageBytes_min << std::endl;
+
 	std::cout << "//////    FindPeople by health and radius     //////" << std::endl;
 	std::vector<sPerson> vec_findByHealthRad;
 	loc.x = 10.0f;
 	loc.y = 1.0f;
 	loc.z = 15;
-	myVec.FindPeople(vec_findByHealthRad, loc, 1000, 0.0f, 80.0f, 3);
+	myList.FindPeople(vec_findByHealthRad, loc, 1000, 0.0f, 80.0f, 3);
 	for (int i = 0; i < vec_findByHealthRad.size(); i++)
 	{
 		std::cout << "First: " << vec_findByHealthRad[i].first << std::endl;
@@ -173,7 +175,7 @@ int main()
 
 	std::cout << "//////    FindPeople by First     //////" << std::endl;
 	std::vector<sPerson> vec_findByNameFirst;
-	myVec.FindPeopleByName(vec_findByNameFirst, jacobWithFirstOnly);
+	myList.FindPeopleByName(vec_findByNameFirst, jacobWithFirstOnly);
 	for (int i = 0; i < vec_findByNameFirst.size(); i++)
 	{
 		std::cout << "First: " << vec_findByNameFirst[i].first << std::endl;
@@ -189,7 +191,7 @@ int main()
 
 	std::cout << "//////    FindPeople by Last     //////" << std::endl;
 	std::vector<sPerson> vec_findByNameLast;
-	myVec.FindPeopleByName(vec_findByNameLast, michael);
+	myList.FindPeopleByName(vec_findByNameLast, michael);
 	for (int i = 0; i < vec_findByNameLast.size(); i++)
 	{
 		std::cout << "First: " << vec_findByNameLast[i].first << std::endl;

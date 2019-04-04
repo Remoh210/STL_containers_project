@@ -131,7 +131,7 @@
     <ClInclude Include="STL_Map.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="STL_Map_main.cpp" />
     <ClCompile Include="STL_Map.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

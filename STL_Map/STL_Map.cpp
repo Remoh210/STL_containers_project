@@ -1,13 +1,11 @@
-#ifdef _WIN32
 #include <math.h>
-#elif __APPLE__	
-#include <cmath> //if OSX compiler -> use cmath
-#endif
 #include <fstream>
 #include "iPersonMotron.h"
 #include "STL_Map.h"
 #include <algorithm>
 #include <iostream>
+#include <Windows.h>
+#include <psapi.h>
 
 
 //   ________  _________  ___               _____ ______   ________  ________   
@@ -23,10 +21,6 @@ float distance(sPoint point, sPoint point2)
 {
 	return std::sqrt(pow((point.x - point2.x), 2) + pow((point.y - point2.y), 2) + pow((point.z - point2.z), 2));
 }
-
-
-
-
 
 
 //Random float generator
@@ -52,6 +46,7 @@ STL_Map::~STL_Map()
 
 bool STL_Map::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, std::string firstNameMaleFileName, std::string lastNameFileName)
 {
+	this->startCall();
 	std::vector <std::string> vec_FemaleNames;
 	std::vector <std::string> vec_MaleNames;
 	std::vector <std::string> vec_Surnames;
@@ -177,40 +172,16 @@ bool STL_Map::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, st
 		}	
 		
 	}
-
+	this->endCall();
 	return true;
 }
 
 
-void STL_Map::GenerateData(std::string first, int number)
-{
-	int GenerateNumber = rand() % number + 1;
-	for(int i = 0; i < GenerateNumber; i++)
-	{
-		sPerson curPerson;
-		curPerson.first = first;
-		//Generate age
-		int age = rand() % 100 + 1;
-		curPerson.age = age;
-		//Generate health
-		float health = RandomFloat(10.0f, 100.0f);
-		curPerson.health = health;
-		float x = RandomFloat(-5000.0f, 5000.0f);
-		float y = RandomFloat(-100.0f, 100.0f);
-		float z = RandomFloat(-5000.0f, 5000.0f);
-		sPoint location;
-		location.x = x;
-		location.y = y;
-		location.z = z;
-		curPerson.location = location;
-		//this->mMap_Person.insert(curPerson);
-	}
-	
-}
 
 
 bool STL_Map::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personToMatch, int maxNumberOfPeople)
 {
+	this->startCall();
 	int count = 0;
 	//Search by first
 	if (personToMatch.first != "" && personToMatch.last == "")
@@ -224,6 +195,7 @@ bool STL_Map::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personTo
 				count++;
 				if (count == maxNumberOfPeople)
 				{
+					this->endCall();
 					return true;
 				}
 			}
@@ -242,6 +214,7 @@ bool STL_Map::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personTo
 				count++;
 				if (count == maxNumberOfPeople)
 				{
+					this->endCall();
 					return true;
 				}
 			}
@@ -259,6 +232,7 @@ bool STL_Map::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personTo
 				count++;
 				if (count == maxNumberOfPeople)
 				{
+					this->endCall();
 					return true;
 				}
 			}
@@ -276,6 +250,7 @@ bool STL_Map::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personTo
 			count++;
 			if (count == maxNumberOfPeople)
 			{
+				this->endCall();
 				return true;
 			}
 
@@ -283,7 +258,7 @@ bool STL_Map::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personTo
 
 	}
 
-	
+	this->endCall();
 	//If 0 people found
 	if (count == 0)
 	{
@@ -298,10 +273,12 @@ bool STL_Map::FindPeopleByName(std::vector<sPerson>& vecPeople, sPerson personTo
 
 bool STL_Map::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<sPerson>& vecPeopleToMatch, int maxNumberOfPeople)
 {
+	this->startCall();
 	for (int i = 0; i < vecPeopleToMatch.size(); i++)
 	{
 		FindPeopleByName(vecPeople, vecPeopleToMatch[i], maxNumberOfPeople);
 	}
+	this->endCall();
 	if (vecPeople.size() == 0) { return false; }
 	else { return true; }
 	
@@ -309,17 +286,25 @@ bool STL_Map::FindPeopleByName(std::vector<sPerson>& vecPeople, std::vector<sPer
 
 bool STL_Map::GetAt(unsigned int index, sPerson & thePerson)
 {
+	this->startCall();
 	if (index < this->mMap_Person.size())
 	{
 		thePerson = this->mMap_Person[index];
+		this->endCall();
 		return true;
 	}
-
+	this->endCall();
 	return false;
 }
 
 
 
+
+bool STL_Map::GetPerformanceFromLastCall(sPerfData & callStats)
+{
+	callStats = this->m_perfData;
+	return true;
+}
 
 eContainerType STL_Map::getContainerType(void)
 {
@@ -328,27 +313,81 @@ eContainerType STL_Map::getContainerType(void)
 
 unsigned int STL_Map::GetSize(void)
 {
+	this->startCall();
 	return this->mMap_Person.size();
+	this->endCall();
+}
+
+void STL_Map::startCall()
+{
+	HANDLE hProcess;
+	PROCESS_MEMORY_COUNTERS pmc;
+
+	hProcess = GetCurrentProcess();
+	GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc));
+	if (NULL == hProcess)
+	{
+		return;
+	}
+
+	this->m_perfData.memoryUsageBytes_min = pmc.WorkingSetSize;
+	this->m_perfData.memoryUsageBytes_max = pmc.WorkingSetSize;
+	this->m_perfData.memoryUsageBytes_avg = pmc.WorkingSetSize;
+}
+
+void STL_Map::updateMemoryUsage()
+{
+	HANDLE hProcess;
+	PROCESS_MEMORY_COUNTERS pmc;
+
+	hProcess = GetCurrentProcess();
+	GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc));
+
+	if (NULL == hProcess)
+	{
+		return;
+	}
+
+	double current = pmc.WorkingSetSize;
+	this->m_perfData.memoryUsageBytes_avg = (this->m_perfData.memoryUsageBytes_avg + current) / 2.0;
+	if (current > this->m_perfData.memoryUsageBytes_max) {
+		this->m_perfData.memoryUsageBytes_max = current;
+	}
+	else if (current < this->m_perfData.memoryUsageBytes_min) {
+		this->m_perfData.memoryUsageBytes_min = current;
+	}
+}
+
+void STL_Map::endCall()
+{
+	updateMemoryUsage();
+	clock_t end = clock();
+	clock_t delta = end - start_time;
+	double a = (double)delta / (CLOCKS_PER_SEC / 100);
+	this->m_perfData.elapsedCallTime_ms = static_cast<float>(a);
 }
 
 
 bool STL_Map::FindPersonByID(sPerson &person, unsigned long long uniqueID)
 {
+	this->startCall();
 	for (int i = 0; i < this->mMap_Person.size(); i++)
 	{
 		
 		if(this->mMap_Person[i].uniqueID == uniqueID)
 		{
 			person = this->mMap_Person[i];
+			this->endCall();
 			return true;
 		}
 	}
-
+	this->endCall();
 	return false;
 }
 
 bool STL_Map::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, int maxPeopleToReturn)
 {
+	this->startCall();
 	int count = 0;
 	for (int i = 0; i < this->mMap_Person.size(); i++)
 	{
@@ -358,11 +397,13 @@ bool STL_Map::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float
 			count++;
 			if (count == maxPeopleToReturn)
 			{
+				this->endCall();
 				return true;
 			}
 		}
 	}
     //If 0 people found
+	this->endCall();
     if(count == 0)
     {
 		return false;
@@ -375,6 +416,7 @@ bool STL_Map::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float
 
 bool STL_Map::FindPeople(std::vector<sPerson> &vecPeople, float minHealth, float maxHealth, int maxPeopleToReturn)
 {
+	this->startCall();
     int count = 0;
     for (int i = 0; i < this->mMap_Person.size(); i++)
     {
@@ -384,11 +426,13 @@ bool STL_Map::FindPeople(std::vector<sPerson> &vecPeople, float minHealth, float
             count++;
             if (count == maxPeopleToReturn)
             {
+				this->endCall();
                 return true;
             }
         }
     }
     //If 0 people found
+	this->endCall();
     if(count == 0)
     {
         return false;
@@ -401,6 +445,7 @@ bool STL_Map::FindPeople(std::vector<sPerson> &vecPeople, float minHealth, float
 
 bool STL_Map::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float radius, float minHealth, float maxHealth, int maxPeopleToReturn)
 {
+	this->startCall();
 	int count = 0;
 	for (int i = 0; i < this->mMap_Person.size(); i++)
 	{
@@ -412,11 +457,13 @@ bool STL_Map::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float
 				count++;
 				if (count == maxPeopleToReturn)
 				{
+					this->endCall();
 					return true;
 				}
 			}
 		}
 	}
+	this->endCall();
 	//If 0 people found
 	if (count == 0)
 	{
@@ -430,6 +477,7 @@ bool STL_Map::FindPeople(std::vector<sPerson>& vecPeople, sPoint location, float
 
 bool STL_Map::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
 {
+	this->startCall();
 	switch (sortType)
 	{
 	case iPersonMotron::ASC_FIRST_THEN_LAST:
@@ -627,6 +675,6 @@ bool STL_Map::SortPeople(std::vector<sPerson>& vecPeople, eSortType sortType)
 		vecPeople.push_back(mMap_Person[i]);
 	}
 
-
+	this->endCall();
 	return true;
 }

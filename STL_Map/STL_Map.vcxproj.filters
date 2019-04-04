@@ -26,10 +26,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="STL_Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="STL_Map.cpp">
+    <ClCompile Include="STL_Map_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
