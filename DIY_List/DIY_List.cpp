@@ -7,6 +7,17 @@
 #include <fstream>
 #include <cmath>
 
+
+//   ________  ___      ___    ___      ___       ___  ________  _________   
+//  |\   ___ \|\  \    |\  \  /  /|    |\  \     |\  \|\   ____\|\___   ___\ 
+//  \ \  \_|\ \ \  \   \ \  \/  / /    \ \  \    \ \  \ \  \___|\|___ \  \_| 
+//   \ \  \ \\ \ \  \   \ \    / /      \ \  \    \ \  \ \_____  \   \ \  \  
+//    \ \  \_\\ \ \  \   \/  /  /        \ \  \____\ \  \|____|\  \   \ \  \ 
+//     \ \_______\ \__\__/  / /           \ \_______\ \__\____\_\  \   \ \__\
+//      \|_______|\|__|\___/ /             \|_______|\|__|\_________\   \|__|
+//                    \|___|/                            \|_________|        
+// 
+
 //Random float generator
 float RandomFloat(float a, float b)
 {
@@ -14,6 +25,10 @@ float RandomFloat(float a, float b)
 	float diff = b - a;
 	float r = random * diff;
 	return a + r;
+}
+
+DIY_List::DIY_List()
+{
 }
 
 bool DIY_List::LoadDataFilesIntoContainer(std::string firstNameFemaleFileName, std::string firstNameMaleFileName, std::string lastNameFileName)
@@ -319,76 +334,127 @@ public:
 		return a->first <= b->first;
 	};
 };
-//
-//
-//class FirstNameComparer : public NodeComparer
-//{
-//public:
-//	bool operator()(sPerson *a, sPerson *b)
-//	{
-//		return a->first <= b->first;
-//	};
-//};
-//
-//class LastNameComparer : public NodeComparer
-//{
-//public:
-//	bool operator()(sPerson *a, sPerson *b)
-//	{
-//		return a->last <= b->last;
-//	};
-//};
 
-void DIY_List::_qsort(Node *left, Node *right, NodeComparer &cmp, Node **newHead, Node **newTail)
+
+
+class FirstThenLastASC_omparer : public NodeComparer
 {
-	if (left == right) return;
-	Node *i = left;
-
-	Node *pivot = right;
-	Node *tail = pivot;
-	Node *newLeft = NULL;
-	bool swapsOccured = false;
-	while (i != pivot && i != NULL)
+public:
+	bool operator()(sPerson *a, sPerson *b)
 	{
-		if (cmp(i->value, pivot->value) && newLeft == NULL)
+		if (b->first > a->first)
 		{
-			newLeft = i;
-			i = i->nextNode;
-			continue;
+			return true;
 		}
-		if (i == NULL || i == pivot)
+		else if (b->first == a->first)
 		{
-			break;
+			return a->last <= b->last;
 		}
-		swapsOccured = true;
-		Node *newI = i->nextNode;
-		newI->previousNode = i->previousNode;
-		i->previousNode->nextNode = newI;
+		return false;
+	};
+};
 
-		i->previousNode = tail;
-		i->nextNode = NULL;
-		tail->nextNode = i;
-		tail = i;
-		i = newI;
-	}
-	if (swapsOccured) {
-		_qsort(newLeft, pivot, cmp, NULL, NULL);
-		_qsort(pivot, tail, cmp, NULL, NULL);
-	}
-
-	if (newHead != NULL)
-	{
-		*newHead = newLeft;
-		*newTail = tail;
-	}
-}
-
-
-bool DIY_List::GetPerformanceFromLastCall(sPerfData &callStats)
+class LastThenFirstASC_omparer : public NodeComparer
 {
-	callStats = this->m_perfData;
-	return true;
-}
+public:
+	bool operator()(sPerson *a, sPerson *b)
+	{
+		if (b->last > a->last)
+		{
+			return true;
+		}
+		else if (b->last == a->last)
+		{
+			return a->first <= b->first;
+		}
+		return false;
+	};
+};
+
+
+class FirstThenLastDESC_omparer : public NodeComparer
+{
+public:
+	bool operator()(sPerson *a, sPerson *b)
+	{
+		if (b->first < a->first)
+		{
+			return true;
+		}
+		else if (b->first == a->first)
+		{
+			return a->last >= b->last;
+		}
+		return false;
+	};
+};
+
+class LastThenFirstDESC_omparer : public NodeComparer
+{
+public:
+	bool operator()(sPerson *a, sPerson *b)
+	{
+		if (b->last < a->last)
+		{
+			return true;
+		}
+		else if (b->last == a->last)
+		{
+			return a->first >= b->first;
+		}
+		return false;
+	};
+};
+
+
+
+
+
+
+
+class ID_ASC_Comparer : public NodeComparer
+{
+public:
+	bool operator()(sPerson *a, sPerson *b)
+	{
+		return a->uniqueID <= b->uniqueID;
+	};
+};
+
+class ID_DESC_Comparer : public NodeComparer
+{
+public:
+	bool operator()(sPerson *a, sPerson *b)
+	{
+		return a->uniqueID >= b->uniqueID;
+	};
+};
+
+
+class HealthASC_Comparer : public NodeComparer
+{
+public:
+	bool operator()(sPerson *a, sPerson *b)
+	{
+		return a->health <= b->health;
+	};
+};
+
+class HealthDESC_Comparer : public NodeComparer
+{
+public:
+	bool operator()(sPerson *a, sPerson *b)
+	{
+		return a->health >= b->health;
+	};
+};
+
+
+
+
+
+
+
 
 void DIY_List::startCall()
 {
@@ -439,54 +505,151 @@ void DIY_List::endCall()
 	this->m_perfData.elapsedCallTime_ms = static_cast<float>(a);
 }
 
+bool DIY_List::GetPerformanceFromLastCall(sPerfData & callStats)
+{
+	callStats = this->m_perfData;
+	return true;
+}
+
+void DIY_List::_qsort(Node *left, Node *right, NodeComparer &cmp, Node **newHead, Node **newTail)
+{
+	if (left == right || left == NULL || right == NULL)
+		return;
+	Node *i = left;
+
+	Node *pivot = right;
+	Node *tail = pivot;
+	Node *newLeft = NULL;
+	bool swapsOccured = false;
+	int swaps = 0;
+	while (i != pivot && i != NULL)
+	{
+
+		if (cmp(i->value, pivot->value))
+		{
+			if (newLeft == NULL)
+			{
+				newLeft = i;
+			}
+			i = i->nextNode;
+			continue;
+		}
+		if (i == NULL || i == pivot)
+		{
+			break;
+		}
+		swapsOccured = true;
+		swaps++;
+		Node *newI = i->nextNode;
+		newI->previousNode = i->previousNode;
+
+		if (i->previousNode != NULL) {
+			i->previousNode->nextNode = newI;
+		}
+
+		i->previousNode = tail;
+		i->nextNode = tail->nextNode;
+		tail->nextNode = i;
+		tail = i;
+		i = newI;
+	}
+	if (newLeft == NULL) {
+		newLeft = pivot;
+	}
+	if (swapsOccured)
+	{
+		// std::cout << "LEFT RECUR\n";
+		_qsort(newLeft, pivot->previousNode, cmp, NULL, NULL);
+		// std::cout << "RIGHT RECUR\n";
+		_qsort(pivot, tail, cmp, NULL, NULL);
+	}
+
+	if (newHead != NULL)
+	{
+		while (newLeft->previousNode != NULL) {
+			newLeft = newLeft->previousNode;
+		}
+		*newHead = newLeft;
+
+		while (tail->nextNode != NULL) {
+			tail = tail->nextNode;
+		}
+		*newTail = tail;
+	}
+}
+
+
+
 //Sort
 bool DIY_List::SortPeople(std::vector<sPerson> &vecPeople, eSortType sortType)
 {
-	
-	
-
-
+	this->startCall();
+	NodeComparer *cmp = NULL;
 
 	switch (sortType)
 	{
 	case iPersonMotron::ASC_FIRST_THEN_LAST:
 	{
-		Node* newFirst;
-	    Node* newLast;
-		FirstNameComparer cmp;
-		_qsort(firstNode, lastNode, cmp, &newFirst, &newLast);
-
-		firstNode = newFirst;
-		lastNode = newLast;
-		for (Node *i = firstNode; i != NULL; i = i->nextNode)
-		{
-			vecPeople.push_back(*i->value);
-		}
+		cmp = new FirstThenLastASC_omparer();
+		break;
+	}
+	case iPersonMotron::DESC_FIRST_THEN_LAST:
+	{
+		cmp = new FirstThenLastDESC_omparer();
 		break;
 	}
 		
-	case iPersonMotron::DESC_FIRST_THEN_LAST:
-		break;
 	case iPersonMotron::ASC_LAST_THEN_FIRST:
+	{
+		cmp = new LastThenFirstASC_omparer();
 		break;
+	}
+
 	case iPersonMotron::DESC_LAST_THEN_FIRST:
+	{
+		cmp = new LastThenFirstDESC_omparer();
 		break;
+	}
+		
 	case iPersonMotron::ASC_BY_ID:
+	{
+		cmp = new ID_ASC_Comparer();
 		break;
+	}
 	case iPersonMotron::DESC_BY_ID:
+	{
+		cmp = new ID_DESC_Comparer();
 		break;
+	}
+		
 	case iPersonMotron::ASC_BY_HEALTH:
+	{
+		cmp = new HealthASC_Comparer();
 		break;
+	}
+		
 	case iPersonMotron::DESC_BY_HEALTH:
+	{
+		cmp = new HealthDESC_Comparer();
 		break;
+	}
 	default:
 		break;
 	}
 
+	Node *newFirst;
+	Node *newLast;
+	_qsort(firstNode, lastNode, *cmp, &newFirst, &newLast);
 
-	
+	firstNode = newFirst;
+	lastNode = newLast;
+	for (Node *i = firstNode; i != NULL; i = i->nextNode)
+	{
+		vecPeople.push_back(*i->value);
+	}
+	delete cmp;
 
-
+	this->endCall();
 	return true;
 }
 
@@ -497,6 +660,7 @@ void DIY_List::clear()
 	{
 		Node *i_cpy = i;
 		i = i->nextNode;
+		delete i_cpy->value;
 		delete i_cpy;
 	}
 	this->firstNode = NULL;
@@ -505,8 +669,8 @@ void DIY_List::clear()
 }
 void DIY_List::PushFront(sPerson &person)
 {
-
-	Node *newNode = new Node(&person);
+	sPerson *sp = new sPerson(person);
+	Node *newNode = new Node(sp);
 	if (this->lastNode == NULL)
 	{
 		this->firstNode = newNode;
@@ -522,9 +686,11 @@ void DIY_List::PushFront(sPerson &person)
 }
 void DIY_List::SetAt(int idx, sPerson &p)
 {
+	this->startCall();
 	if (this->size == 0)
 	{
 		PushBack(p);
+		this->endCall();
 		return;
 	}
 	Node *nth = firstNode;
@@ -543,11 +709,14 @@ void DIY_List::SetAt(int idx, sPerson &p)
 		nextNode->previousNode = newNode;
 	}
 	nth->nextNode = newNode;
+	this->endCall();
 }
 
 void DIY_List::PushBack(sPerson &person)
 {
-	Node* newNode = new Node(&person);
+	this->startCall();
+	sPerson *sp = new sPerson(person);
+	Node *newNode = new Node(sp);
 	if (this->firstNode == NULL)
 	{
 		this->firstNode = newNode;
@@ -560,4 +729,5 @@ void DIY_List::PushBack(sPerson &person)
 		this->lastNode = newNode;
 	}
 	this->size++;
+	this->endCall();
 }

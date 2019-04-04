@@ -14,7 +14,7 @@ public:
 class DIY_List : public iPersonMotron
 {
 public:
-	DIY_List() : firstNode(NULL), lastNode(NULL), size(0) {};
+	DIY_List();
 	~DIY_List() { clear(); }
 
 	//Will also generate random data for each peeson

@@ -81,7 +81,6 @@ int main()
 		system("pause");
 		return 0;
 	}
-
 	sPerfData perfData;
 	myVec.GetPerformanceFromLastCall(perfData);
 	std::cout << "//////    Perfomance     //////" << std::endl;
@@ -89,6 +88,8 @@ int main()
 	std::cout << " memoryUsageBytes_avg: " << std::fixed << perfData.memoryUsageBytes_avg << std::endl;
 	std::cout << " memoryUsageBytes_max: " << std::fixed << perfData.memoryUsageBytes_max << std::endl;
 	std::cout << " memoryUsageBytes_min: " << std::fixed << perfData.memoryUsageBytes_min << std::endl;
+
+
 
 	
 
@@ -98,6 +99,8 @@ int main()
 	//cout << "capacity :" << myVec.GetCapacity() << std::endl;
 	std::vector<sPerson> sortedVec;
 	myVec.SortPeople(sortedVec,  iPersonMotron::ASC_BY_HEALTH);
+
+	std::cout << "//////   ASC_BY_HEALTH      //////" << std::endl;
 
 	for (unsigned int index = 0; index != 100 /*myVec.GetSize()*/; index++)
 	{
@@ -109,6 +112,12 @@ int main()
 			<< thePerson.health << " "
 			<< thePerson.last << std::endl;
 	}
+
+	std::cout << "//////    Perfomance     //////" << std::endl;
+	std::cout << " elapsedCallTime_ms  :" << std::fixed << perfData.elapsedCallTime_ms << std::endl;
+	std::cout << " memoryUsageBytes_avg: " << std::fixed << perfData.memoryUsageBytes_avg << std::endl;
+	std::cout << " memoryUsageBytes_max: " << std::fixed << perfData.memoryUsageBytes_max << std::endl;
+	std::cout << " memoryUsageBytes_min: " << std::fixed << perfData.memoryUsageBytes_min << std::endl;
 
 
 	std::cout << "//////    FindPersonByID     //////" << std::endl;

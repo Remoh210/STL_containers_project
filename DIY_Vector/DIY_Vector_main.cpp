@@ -90,6 +90,7 @@ int main()
 	cout << "size :" << myVec.GetSize() << std::endl;
 	cout << "capacity :" << myVec.GetCapacity() << std::endl;
 	std::vector<sPerson> sortedVec;
+	std::cout << "//////    ASC_BY_HEALTH     //////" << std::endl;
 	myVec.SortPeople(sortedVec,  iPersonMotron::ASC_BY_HEALTH);
 
 	for (unsigned int index = 0; index != 100 /*myVec.GetSize()*/; index++)
@@ -101,6 +102,13 @@ int main()
 			<< sortedVec[index].last << " "
 			<< sortedVec[index].health << std::endl;
 	}
+
+	myVec.GetPerformanceFromLastCall(perfData);
+	std::cout << "//////    Perfomance     //////" << std::endl;
+	std::cout << " elapsedCallTime_ms  :" << std::fixed << perfData.elapsedCallTime_ms << std::endl;
+	std::cout << " memoryUsageBytes_avg: " << std::fixed << perfData.memoryUsageBytes_avg << std::endl;
+	std::cout << " memoryUsageBytes_max: " << std::fixed << perfData.memoryUsageBytes_max << std::endl;
+	std::cout << " memoryUsageBytes_min: " << std::fixed << perfData.memoryUsageBytes_min << std::endl;
 
 	std::cout << "//////    FindPersonByID     //////" << std::endl;
 	sPerson findByIdPerson;

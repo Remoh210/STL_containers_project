@@ -1,5 +1,6 @@
 #include "DIY_List.h"
 #include <iostream>
+#include <algorithm>
 using namespace std;
 int main()
 {
@@ -95,13 +96,13 @@ int main()
 	cout << "size :" << myList.GetSize() << std::endl;
 
 	std::vector<sPerson> sortedVec;
-	myList.SortPeople(sortedVec, iPersonMotron::ASC_FIRST_THEN_LAST);
+	myList.SortPeople(sortedVec, iPersonMotron::DESC_FIRST_THEN_LAST);
 
-	for (unsigned int index = 0; index != 100 /*myList.GetSize()*/; index++)
+	for (unsigned int index = 0; index < std::min(100, (int)myList.GetSize()); index++)
 	{
 
 
-		std::cout << index << " "
+			std::cout << sortedVec[index].uniqueID << " "
 			<< sortedVec[index].first << " "
 			<< sortedVec[index].last << " "
 			<< sortedVec[index].health << std::endl;
@@ -112,6 +113,12 @@ int main()
 	std::cout << " memoryUsageBytes_avg: " << std::fixed << perfData.memoryUsageBytes_avg << std::endl;
 	std::cout << " memoryUsageBytes_max: " << std::fixed << perfData.memoryUsageBytes_max << std::endl;
 	std::cout << " memoryUsageBytes_min: " << std::fixed << perfData.memoryUsageBytes_min << std::endl;
+
+
+
+
+
+
 
 	std::cout << "//////    FindPersonByID     //////" << std::endl;
 	sPerson findByIdPerson;
